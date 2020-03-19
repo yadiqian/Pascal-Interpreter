@@ -10,4 +10,3 @@ main = do
     case parseString contents of 
         Left err -> print $ show err
         Right ast -> putStrLn $ interpret ast 
-

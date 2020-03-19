@@ -38,12 +38,17 @@ $alpha = [a-zA-Z]               -- alphabetic characters
 tokens :-
   $white+                               ; -- remove multiple white-spaces
   "//".*                                ; -- skip one line comments
+  "(*".+"*)"                             ; -- skip comments
   $digit+                               { tok_read     TokenInt }
-  [\+]|[\-]|[\*]|[\/]|[=]               { tok_read     TokenOp }
-  [\(]|[\)]|begin|end|true|false        { tok_read     TokenK }
-  [:=]                                  { tok_read     TokenOp }
-  $alpha [$alpha $digit \_ \']*         { tok_string   TokenID }
-
+  $digit+\.$digit*                      { tok_read     TokenFloat }
+  [\+]|[\-]|[\*]|[\/]|":="              { tok_string     TokenOp }
+  and|or|xor|not                        { tok_string     TokenOp }
+  [\>]|[\<]|[\=]|">="|"<="|"<>"         { tok_string     TokenOp }
+  program|begin|end|writeln|var         { tok_string     TokenK }
+  boolean|true|false|real|string        { tok_string     TokenK }
+  [\;]|[\:]|[\,]|[\(]|[\)]              { tok_string     TokenK }
+  $alpha [$alpha $digit \_ \']*         { tok_string     TokenID }
+  [\.]                                  { tok     TokenEOF }
 {
 
 -- Some action helpers:
@@ -65,6 +70,7 @@ data TokenClass
  = TokenOp     String
  | TokenK      String
  | TokenInt    Int
+ | TokenFloat  Float
  | TokenID    String
  | TokenEOF
  deriving (Eq, Show)

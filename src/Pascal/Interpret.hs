@@ -5,6 +5,8 @@ module Pascal.Interpret
 where
 
 import Pascal.Data
+import Pascal.EvalReal
+import Pascal.EvalBool
 
 -- TODO: define auxiliary functions to aid interpretation
 -- Feel free to put them here or in different modules
@@ -13,6 +15,18 @@ import Pascal.Data
 
 -- make sure you write test unit cases for all functions
 
+-- Evaluate general expressions
+evalExp :: GenExp -> String
+evalExp (FloatExp exp) = show $ evalRealExp exp
+evalExp (BExp exp) = show $ evalBoolExp exp
+
+-- Evaluate statement
+parseStmt :: Statement -> String
+parseStmt (Print exp) = evalExp exp ++ "\n"
+
+-- evaluate program statements
 interpret :: Program -> String
--- TODO: write the interpreter
+interpret ([stmt]) = parseStmt stmt
+interpret (stmt : tl) = interpret [stmt] ++ interpret tl
+
 interpret _ = "Not implemented"
