@@ -44,6 +44,7 @@ tokens :-
   [\+]|[\-]|[\*]|[\/]|":="              { tok_string     TokenOp }
   and|or|xor|not                        { tok_string     TokenOp }
   [\>]|[\<]|[\=]|">="|"<="|"<>"         { tok_string     TokenOp }
+  sqrt|sin|cos|ln|exp                   { tok_string     TokenOp }
   program|begin|end|writeln|var         { tok_string     TokenK }
   boolean|true|false|real|string        { tok_string     TokenK }
   [\;]|[\:]|[\,]|[\(]|[\)]              { tok_string     TokenK }

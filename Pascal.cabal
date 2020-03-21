@@ -25,12 +25,15 @@ executable Pascal
                      , Pascal.Data
                      , Pascal.Base
                      , Pascal.Wrapper
+                     , Pascal.EvalBool
+                     , Pascal.EvalReal
+                     , Pascal.Scope
   -- other-extensions:    
   build-depends:       base >=4.7
                       , bytestring
                       , array
                       , hspec
-
+                      , containers
   hs-source-dirs:      src
   build-tools:         happy, alex
   default-language:    Haskell2010

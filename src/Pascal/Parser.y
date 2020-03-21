@@ -32,6 +32,11 @@ import Pascal.Lexer
         '>='            { Token _ (TokenOp ">=") }
         '<='            { Token _ (TokenOp "<=") }
         '<>'            { Token _ (TokenOp "<>") }
+        'sqrt'          { Token _ (TokenOp "sqrt") }
+        'sin'           { Token _ (TokenOp "sin") }
+        'cos'           { Token _ (TokenOp "cos") }
+        'ln'            { Token _ (TokenOp "ln") }
+        'exp'           { Token _ (TokenOp "exp") }
         '('             { Token _ (TokenK  "(")   }
         ')'             { Token _ (TokenK  ")")   }
         'begin'         { Token _ (TokenK "begin") }
@@ -57,10 +62,10 @@ import Pascal.Lexer
 %%
 
 -- Entry point
-Program :: {Program}
-    : 'program' ID ';' Defs Body { $5 }
+Program :: { Program }
+    : 'program' ID ';' Defs Body { Process $4 $5 }
 
-Defs :: {[Definition]}
+Defs :: { Defs }
     : { [] } -- nothing; make empty list
     | Definition Defs { $1 : $2 } -- put definition as first element of defs
 
@@ -90,6 +95,12 @@ RealExp :: { RealExp }
     | '(' RealExp ')' { $2 } -- ignore brackets
     | int { Integer $1 }
     | float { Real $1 }
+    | ID { VarReal $1 }
+    | 'sqrt' RealExp { Sqrt $2 }
+    | 'sin' RealExp { Sin $2 }
+    | 'cos' RealExp { Cos $2 }
+    | 'ln' RealExp { Ln $2 }
+    | 'exp' RealExp { Exp $2 }
 
 BoolExp :: { BoolExp }
     : 'true' { True_C }
@@ -105,6 +116,7 @@ BoolExp :: { BoolExp }
     | RealExp '>=' RealExp { Comp ">=" $1 $3 }
     | RealExp '<=' RealExp { Comp "<=" $1 $3 }
     | RealExp '<>' RealExp { Comp "<>" $1 $3 }
+    | ID { VarBool $1 }
 
 GenExp :: { GenExp }
     : RealExp { FloatExp $1 }

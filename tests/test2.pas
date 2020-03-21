@@ -1,8 +1,7 @@
 program test2;
 (* Test variable declaration and assignment. *)
-var 
-  a, b: Real;
-  c, d: boolean;
+var a, b: real;
+var c, d: boolean;
 var e: real;
 
 begin

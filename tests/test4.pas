@@ -1,8 +1,7 @@
 program test4;
 (* Test if then else *)
-var 
-  a, c: real;
-  b: boolean;
+var a, c: real;
+var b: boolean;
 
 begin
   a := 5;

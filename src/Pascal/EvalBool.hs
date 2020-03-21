@@ -6,25 +6,29 @@ where
 
 import Pascal.Data
 import Pascal.EvalReal
+import Pascal.Scope
 
 -- Evaluate boolean expression
-evalBoolExp :: BoolExp -> Bool
-evalBoolExp True_C = True
-evalBoolExp False_C = False
+evalBoolExp :: BoolExp -> Table -> Bool
+evalBoolExp True_C _ = True 
+evalBoolExp False_C _ = False 
 
 -- and
-evalBoolExp (OpB "and" e1 e2) = and [evalBoolExp e1, evalBoolExp e2]
+evalBoolExp (OpB "and" e1 e2) table = and [evalBoolExp e1 table, evalBoolExp e2 table]
 -- or
-evalBoolExp (OpB "or" e1 e2) = or [evalBoolExp e1, evalBoolExp e2]
+evalBoolExp (OpB "or" e1 e2) table = or [evalBoolExp e1 table, evalBoolExp e2 table]
 -- xor
-evalBoolExp (OpB "xor" e1 e2) = evalBoolExp e1 /= evalBoolExp e2
+evalBoolExp (OpB "xor" e1 e2) table = evalBoolExp e1 table /= evalBoolExp e2 table
 -- not
-evalBoolExp (Not e) = not $ evalBoolExp e
+evalBoolExp (Not e) table = not $ evalBoolExp e table
 
 -- Evaluate comparison
-evalBoolExp (Comp ">" e1 e2) = evalRealExp e1 > evalRealExp e2
-evalBoolExp (Comp "<" e1 e2) = evalRealExp e1 < evalRealExp e2
-evalBoolExp (Comp "=" e1 e2) = evalRealExp e1 == evalRealExp e2
-evalBoolExp (Comp ">=" e1 e2) = evalRealExp e1 >= evalRealExp e2
-evalBoolExp (Comp "<=" e1 e2) = evalRealExp e1 <= evalRealExp e2
-evalBoolExp (Comp "<>" e1 e2) = evalRealExp e1 /= evalRealExp e2
+evalBoolExp (Comp ">" e1 e2) table = evalRealExp e1 table > evalRealExp e2 table
+evalBoolExp (Comp "<" e1 e2) table = evalRealExp e1 table < evalRealExp e2 table
+evalBoolExp (Comp "=" e1 e2) table = evalRealExp e1 table == evalRealExp e2 table
+evalBoolExp (Comp ">=" e1 e2) table = evalRealExp e1 table >= evalRealExp e2 table
+evalBoolExp (Comp "<=" e1 e2) table = evalRealExp e1 table <= evalRealExp e2 table
+evalBoolExp (Comp "<>" e1 e2) table = evalRealExp e1 table /= evalRealExp e2 table
+
+-- Variable
+evalBoolExp (VarBool name) table = getBool name table
