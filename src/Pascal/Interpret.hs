@@ -41,20 +41,23 @@ parseStmt (If boolExp block1 block2) table = case value of
     Body b -> processBody b table
   where value = evalExp (BExp boolExp) table
 -- case statements
-parseStmt (Case var caseStmts stmts) table = executeCase var caseStmts table
+parseStmt (Case var caseStmts stmts) table = case b of
+  True -> result
+  False -> processBody stmts table
+  where (result, b) = executeCase var caseStmts table False
 
 parseStmt _ table = ("There is a problem", table)
 
 -- Execute case statements 
-executeCase :: String -> [CaseStmt] -> Table -> (String, Table)
-executeCase var [(Check exp stmt)] table 
-  | target == cur = parseStmt stmt table
-  | otherwise = ("", table)
+executeCase :: String -> [CaseStmt] -> Table -> Bool -> ((String, Table), Bool)
+executeCase var [(Check exp stmt)] table b
+  | target == cur = (parseStmt stmt table, True)
+  | otherwise = (("", table), or [b, False])
   where target = getVal var table
         cur = evalExp exp table 
-executeCase var (stmt : tl) table = (str1 ++ str2, newTable2)
-  where (str1, newTable1) = executeCase var [stmt] table
-        (str2, newTable2) = executeCase var tl newTable1
+executeCase var (stmt : tl) table b = ((str1 ++ str2, newTable2), b2)
+  where ((str1, newTable1), b1) = executeCase var [stmt] table b
+        ((str2, newTable2), b2) = executeCase var tl newTable1 (or [b, b1])
 
 -- Process statements
 processBody :: Body -> Table -> (String, Table)
