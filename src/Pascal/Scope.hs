@@ -2,8 +2,7 @@ module Pascal.Scope
 (
     buildTable,
     parseDef,
-    getReal,
-    getBool,
+    getVal,
     assignVal
 ) 
 where
@@ -28,16 +27,7 @@ lookupVal = Map.lookup
 assignVal :: String -> ValueT -> Table -> Table
 assignVal name value table = Map.insert name value table
 
-getReal :: String -> Table -> Float
-getReal name table = case (lookupVal name table) of 
-    Just n -> case n of 
-      Float n -> n
-      Bool n -> 0.0
-    Nothing -> 0.0
-
-getBool :: String -> Table -> Bool
-getBool name table = case (lookupVal name table) of 
-    Just n -> case n of 
-      Bool n -> n
-      Float n -> False
-    Nothing -> False
+getVal :: String -> Table -> ValueT
+getVal name table = case (lookupVal name table) of 
+  Just n -> n
+  Nothing -> Float 0.0

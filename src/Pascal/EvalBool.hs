@@ -31,4 +31,6 @@ evalBoolExp (Comp "<=" e1 e2) table = evalRealExp e1 table <= evalRealExp e2 tab
 evalBoolExp (Comp "<>" e1 e2) table = evalRealExp e1 table /= evalRealExp e2 table
 
 -- Variable
-evalBoolExp (VarBool name) table = getBool name table
+evalBoolExp (VarBool name) table = case getVal name table of
+  Bool b -> b
+  otherwise -> False

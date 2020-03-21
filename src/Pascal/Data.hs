@@ -12,9 +12,10 @@ module Pascal.Data
         ValueT(..),
         Body,
         Program(..),
-        ProgramBlock(..),
         Defs,
-        Table
+        Table,
+        Block(..),
+        CaseStmt(..)
     ) where
 
 import qualified Data.Map as Map
@@ -67,18 +68,22 @@ data Statement =
     -- Variable assignment
     Assign String GenExp
     -- If statement
-    | If BoolExp Statement Statement
+    | If BoolExp Block Block
     -- Block
     | Block [Statement]
     -- writeln
     | Print GenExp
+    -- Case statement
+    | Case String [CaseStmt] [Statement]
+
+data CaseStmt = Check GenExp Statement
 
 data VType = REAL | BOOL
 
 data ValueT =
     Float Float
     | Bool Bool 
-    deriving (Show)
+    deriving (Show, Eq)
 
 data Definition = 
     -- Variable definition, list of var, type
@@ -86,9 +91,9 @@ data Definition =
     -- Procedures
     | Proc String [(String, VType)] Statement
 
-data ProgramBlock =
-    Defs Defs
-    | Stmts Body
+data Block = 
+    Body Body 
+    | Stmt Statement
 
 data Program = Process Defs Body
 

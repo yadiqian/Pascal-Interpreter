@@ -25,12 +25,36 @@ evalExp (BExp exp) table = Bool $ evalBoolExp exp table
 
 -- Evaluate statement
 parseStmt :: Statement -> Table -> (String, Table)
--- parseStmt (Print exp) = evalExp exp ++ "\n"
+-- print statement
 parseStmt (Print exp) table = case evalExp exp table of
     Float f -> (show f ++ "\n", table)
     Bool b -> (show b ++ "\n", table)
+-- assignment
 parseStmt (Assign name exp) table = ("", assignVal name (evalExp exp table) table)
+-- if else statement
+parseStmt (If boolExp block1 block2) table = case value of
+  Bool True -> case block1 of 
+    Stmt s -> parseStmt s table
+    Body b -> processBody b table
+  Bool False -> case block2 of
+    Stmt s -> parseStmt s table
+    Body b -> processBody b table
+  where value = evalExp (BExp boolExp) table
+-- case statements
+parseStmt (Case var caseStmts stmts) table = executeCase var caseStmts table
+
 parseStmt _ table = ("There is a problem", table)
+
+-- Execute case statements 
+executeCase :: String -> [CaseStmt] -> Table -> (String, Table)
+executeCase var [(Check exp stmt)] table 
+  | target == cur = parseStmt stmt table
+  | otherwise = ("", table)
+  where target = getVal var table
+        cur = evalExp exp table 
+executeCase var (stmt : tl) table = (str1 ++ str2, newTable2)
+  where (str1, newTable1) = executeCase var [stmt] table
+        (str2, newTable2) = executeCase var tl newTable1
 
 -- Process statements
 processBody :: Body -> Table -> (String, Table)

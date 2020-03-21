@@ -25,7 +25,9 @@ evalRealExp (Op2 "*" e1 e2) table = evalRealExp e1 table * evalRealExp e2 table
 evalRealExp (Op2 "/" e1 e2) table = evalRealExp e1 table / evalRealExp e2 table
 
 -- Variable
-evalRealExp (VarReal name) table = getReal name table
+evalRealExp (VarReal name) table = case getVal name table of
+  Float f -> f
+  otherwise -> 0.0
 
 -- square root
 evalRealExp (Sqrt e) table = sqrt $ evalRealExp e table

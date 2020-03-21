@@ -8,21 +8,23 @@ begin
   c := 3;
   b := true;
   if a - c = 2 then 
-    writeln ('This is true')
+    // writeln ('This is true')
+    writeln(1)
   else 
     begin
       a := 7;
-      writeln ('This is false');
+      // writeln ('This is false');
+      writeln(-1);
     end;
-  writeln(a);
+  writeln(a + 1);
 
   if (not b or b) then
     begin
       a := exp(c - a);
-      writeln(a);
+      writeln(a - 1);
     end
   else
-    writeln (a); 
+    writeln (a + 1); 
 end.
 
 (*

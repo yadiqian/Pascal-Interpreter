@@ -2,51 +2,51 @@ program test5;
 (* Test case statements. *)
 var
   grade: real;
-  value: boolean;
+var value: boolean;
 
 begin
   grade := 5;
   case (grade) of
-    5: writeln('Excellent!');
-    4: writeln('Well done');
-    3: writeln('You passed');
-    2: writeln('Better try again');
-    1: writeln('You failed hard');
+    5: writeln(5);
+    4: writeln(4);
+    3: writeln(3);
+    2: writeln(2);
+    1: writeln(1);
   else
-    writeln('else1');
-    writeln('else2');
+    writeln(1111);
+    writeln(2222);
   end; 
 
   grade := 3;
   case (grade) of
-    5: writeln('Excellent!');
-    4: writeln('Well done');
-    3: writeln('You passed');
-    2: writeln('Better try again');
-    1: writeln('You failed hard');
+    5: writeln(5);
+    4: writeln(4);
+    3: writeln(3);
+    2: writeln(2);
+    1: writeln(1);
   else
-    writeln('else1');
-    writeln('else2');
+    writeln(1111);
+    writeln(2222);
   end; 
 
   grade := -15;
   case (grade) of
-    5: writeln('Excellent!');
-    4: writeln('Well done');
-    3: writeln('You passed');
-    2: writeln('Better try again');
-    1: writeln('You failed hard');
+    5: writeln(5);
+    4: writeln(4);
+    3: writeln(3);
+    2: writeln(2);
+    1: writeln(1);
   else
-    writeln('else1');
-    writeln('else2');
+    writeln(1111);
+    writeln(2222);
   end; 
 
-  value := TRUE;
+  value := true;
   case (value) of 
-    true: writeln('This is true');
-    false: writeln('This is false');
+    true: writeln(true);
+    false: writeln(false);
   else
-    writeln('This is neither true or false');
+    writeln(0);
   end;
 end.
 

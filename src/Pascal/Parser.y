@@ -49,9 +49,15 @@ import Pascal.Lexer
         'boolean'       { Token _ (TokenK "boolean") }
         'real'          { Token _ (TokenK "real") }
         'string'        { Token _ (TokenK "string") }
+        'if'            { Token _ (TokenK "if") }
+        'then'          { Token _ (TokenK "then") }
+        'else'          { Token _ (TokenK "else") }
+        'case'          { Token _ (TokenK "case") }
+        'of'            { Token _ (TokenK "of") }
         ';'             { Token _ (TokenK ";") }
         ':'             { Token _ (TokenK ":") }
         ','             { Token _ (TokenK ",") }
+        '\''            { Token _ (TokenK "'") }
         '.'             { Token _ TokenEOF }
 
 -- associativity of operators in reverse precedence order
@@ -124,9 +130,22 @@ GenExp :: { GenExp }
 
 Statements :: {[Statement]}
     : { [] } -- nothing; make empty list
-    | Statement Statements { $1 : $2 } -- put statement as first element of statements
+    | Statement ';' Statements { $1 : $3 } -- put statement as first element of statements
 
 Statement :: {Statement}
-    : ID ':=' GenExp ';' { Assign $1 $3 }
-    | 'writeln' '(' GenExp ')' ';' { Print $3 }
+    : ID ':=' GenExp { Assign $1 $3 }
+    | 'writeln' '(' GenExp ')' { Print $3 }
+    | 'if' BoolExp 'then' Block 'else' Block { If $2 $4 $6 }
+    | 'case' '(' ID ')' 'of' CaseStmts 'else' Statements 'end' { Case $3 $6 $8 }
+
+CaseStmts :: { [CaseStmt] }
+    : { [] } 
+    | CaseStmt ';' CaseStmts { $1 : $3 }
+
+CaseStmt :: { CaseStmt }
+    : GenExp ':' Statement { Check $1 $3 }
+
+Block :: { Block }
+    : Statement { Stmt $1 }
+    | Body { Body $1 }
 {}
