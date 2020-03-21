@@ -15,7 +15,9 @@ module Pascal.Data
         Defs,
         Table,
         Block(..),
-        CaseStmt(..)
+        CaseStmt(..),
+        toFloat,
+        toBool
     ) where
 
 import qualified Data.Map as Map
@@ -104,3 +106,10 @@ data Program = Process Defs Body
 type Defs = [Definition]
 type Body = [Statement]
 type Table = Map.Map String ValueT
+
+-- Type conversion
+toFloat :: ValueT -> Float
+toFloat (Float f) = f
+
+toBool :: ValueT -> Bool
+toBool (Bool b) = b

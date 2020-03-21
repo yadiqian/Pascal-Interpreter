@@ -1,10 +1,10 @@
-progRam test9;
+program test9;
 (* Test boolean operations with variables. *)
 
 var
   a, b, c: boolean;
 
-BEGIN
+begin
   a := true;
   b := false;
   c:= a and b;
@@ -19,7 +19,7 @@ BEGIN
   writeln (c);
   c := not (a or b and (c xor b));
   writeln (c);
-eND.
+end.
 
 (*
 Expected output:

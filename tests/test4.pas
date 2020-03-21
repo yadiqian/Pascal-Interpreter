@@ -16,15 +16,15 @@ begin
       // writeln ('This is false');
       writeln(-1);
     end;
-  writeln(a + 1);
+  writeln(a);
 
   if (not b or b) then
     begin
       a := exp(c - a);
-      writeln(a - 1);
+      writeln(a);
     end
   else
-    writeln (a + 1); 
+    writeln (a); 
 end.
 
 (*

@@ -20,8 +20,8 @@ import qualified Data.Map as Map
 
 -- Evaluate general expressions
 evalExp :: GenExp -> Table -> ValueT
-evalExp (FloatExp exp) table = Float $ evalRealExp exp table
-evalExp (BExp exp) table = Bool $ evalBoolExp exp table
+evalExp (FloatExp exp) table = evalRealExp exp table
+evalExp (BExp exp) table = evalBoolExp exp table
 
 -- Evaluate statement
 parseStmt :: Statement -> Table -> (String, Table)

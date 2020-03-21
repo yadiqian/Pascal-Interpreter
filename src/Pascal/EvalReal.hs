@@ -8,34 +8,35 @@ import Pascal.Data
 import Pascal.Scope
 
 -- Evaluate real expressions
-evalRealExp :: RealExp -> Table -> Float
-evalRealExp (Real n) _ = n 
-evalRealExp (Integer n) _ = fromIntegral n 
+evalRealExp :: RealExp -> Table -> ValueT
+evalRealExp (Real n) _ = Float n 
+evalRealExp (Integer n) _ = Float $ fromIntegral n 
 
-evalRealExp (Op1 "-" (Integer n)) _ =  - fromIntegral n
-evalRealExp (Op1 "-" (Real n)) _ =  -n
+evalRealExp (Op1 "-" e) table =  Float $ - toFloat (evalRealExp e table)
 
 -- Addition
-evalRealExp (Op2 "+" e1 e2) table = evalRealExp e1 table + evalRealExp e2 table
+evalRealExp (Op2 "+" e1 e2) table = 
+  Float (toFloat (evalRealExp e1 table) + toFloat (evalRealExp e2 table))
 -- Subtraction
-evalRealExp (Op2 "-" e1 e2) table = evalRealExp e1 table - evalRealExp e2 table
+evalRealExp (Op2 "-" e1 e2) table = 
+  Float (toFloat (evalRealExp e1 table) - toFloat (evalRealExp e2 table))
 -- Multiplcation
-evalRealExp (Op2 "*" e1 e2) table = evalRealExp e1 table * evalRealExp e2 table
+evalRealExp (Op2 "*" e1 e2) table = 
+  Float (toFloat (evalRealExp e1 table) * toFloat (evalRealExp e2 table))
 -- Division
-evalRealExp (Op2 "/" e1 e2) table = evalRealExp e1 table / evalRealExp e2 table
+evalRealExp (Op2 "/" e1 e2) table = 
+  Float (toFloat (evalRealExp e1 table) / toFloat (evalRealExp e2 table))
 
 -- Variable
-evalRealExp (VarReal name) table = case getVal name table of
-  Float f -> f
-  otherwise -> 0.0
+evalRealExp (VarReal name) table = getVal name table
 
 -- square root
-evalRealExp (Sqrt e) table = sqrt $ evalRealExp e table
+evalRealExp (Sqrt e) table = Float (sqrt $ toFloat $ evalRealExp e table)
 -- sin
-evalRealExp (Sin e) table = sin $ evalRealExp e table
+evalRealExp (Sin e) table = Float (sin $ toFloat $ evalRealExp e table)
 -- cos
-evalRealExp (Cos e) table = cos $ evalRealExp e table
+evalRealExp (Cos e) table = Float (cos $ toFloat $ evalRealExp e table)
 -- natural log
-evalRealExp (Ln e) table = log $ evalRealExp e table
+evalRealExp (Ln e) table = Float (log $ toFloat $ evalRealExp e table)
 -- exp
-evalRealExp (Exp e) table = exp $ evalRealExp e table
+evalRealExp (Exp e) table = Float (exp $ toFloat $ evalRealExp e table)

@@ -102,11 +102,11 @@ RealExp :: { RealExp }
     | int { Integer $1 }
     | float { Real $1 }
     | ID { VarReal $1 }
-    | 'sqrt' RealExp { Sqrt $2 }
-    | 'sin' RealExp { Sin $2 }
-    | 'cos' RealExp { Cos $2 }
-    | 'ln' RealExp { Ln $2 }
-    | 'exp' RealExp { Exp $2 }
+    | 'sqrt' '(' RealExp ')' { Sqrt $3 }
+    | 'sin' '(' RealExp ')' { Sin $3 }
+    | 'cos' '(' RealExp ')' { Cos $3 }
+    | 'ln' '(' RealExp ')' { Ln $3 }
+    | 'exp' '(' RealExp ')' { Exp $3 }
 
 BoolExp :: { BoolExp }
     : 'true' { True_C }

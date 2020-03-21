@@ -1,10 +1,10 @@
-progRam test8;
+program test8;
 (* Test arithmetic operations with variables. *)
 
 var
   a, b, c, d: real;
 
-BEGIN
+begin
   a := 5;
   b := -10;
   c := 3;
@@ -17,7 +17,7 @@ BEGIN
   d := a / b * c + 14;
   writeln (d);
   d := d * d / (c / 2) * (a - 1);
-eND.
+end.
 
 (*
 Expected output:
