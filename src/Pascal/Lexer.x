@@ -49,6 +49,7 @@ tokens :-
   boolean|true|false|real|string        { tok_string     TokenK }
   [\;]|[\:]|[\,]|[\(]|[\)]              { tok_string     TokenK }
   if|then|else|case|of                  { tok_string     TokenK }
+  while|do|for|to|downto                { tok_string     TokenK }
   $alpha [$alpha $digit \_ \']*         { tok_string     TokenID }
   [\.]                                  { tok     TokenEOF }
 {

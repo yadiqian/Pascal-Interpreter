@@ -46,7 +46,29 @@ parseStmt (Case var caseStmts stmts) table = case b of
   False -> processBody stmts table
   where (result, b) = executeCase var caseStmts table False
 
+parseStmt (Block stmts) table = processBody stmts table
+
+parseStmt (While boolExp stmt) table = executeWhile boolExp stmt table ""
+
+parseStmt (ForUp name exp1 exp2 stmt) table = 
+  let newTable = assignVal name (evalExp (FloatExp exp1) table) table in
+    executeFor "+" "<=" name exp2 stmt newTable ""
+
+parseStmt (ForDown name exp1 exp2 stmt) table = 
+  let newTable = assignVal name (evalExp (FloatExp exp1) table) table in
+    executeFor "-" ">=" name exp2 stmt newTable ""
+
 parseStmt _ table = ("There is a problem", table)
+
+-- Execute for loop
+executeFor :: String -> String -> String -> RealExp -> Statement -> Table -> String -> (String, Table)
+executeFor op1 op2 var exp stmt table str = case value of
+  Bool True -> let (newStr, newTable1) = parseStmt stmt table in 
+                let newTable2 = assignVal var (evalExp (FloatExp (Op2 op1 (Real varValue) (Integer 1))) newTable1) newTable1
+                    in executeFor op1 op2 var exp stmt newTable2 (str ++ newStr)
+  Bool False -> (str, table)
+  where value = evalExp (BExp (Comp op2 (VarReal var) exp)) table
+        varValue = toFloat $ evalExp (FloatExp (VarReal var)) table
 
 -- Execute case statements 
 executeCase :: String -> [CaseStmt] -> Table -> Bool -> ((String, Table), Bool)
@@ -58,6 +80,14 @@ executeCase var [(Check exp stmt)] table b
 executeCase var (stmt : tl) table b = ((str1 ++ str2, newTable2), b2)
   where ((str1, newTable1), b1) = executeCase var [stmt] table b
         ((str2, newTable2), b2) = executeCase var tl newTable1 (or [b, b1])
+
+-- Execute while loop
+executeWhile :: BoolExp -> Statement -> Table -> String -> (String, Table)
+executeWhile boolExp stmt table str = case value of 
+  Bool True -> let (newStr, newTable) = processBody [stmt] table in
+               executeWhile boolExp stmt newTable (str ++ newStr)
+  Bool False -> (str, table)
+  where value = evalExp (BExp boolExp) table 
 
 -- Process statements
 processBody :: Body -> Table -> (String, Table)

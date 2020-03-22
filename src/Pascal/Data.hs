@@ -77,6 +77,12 @@ data Statement =
     | Print GenExp
     -- Case statement
     | Case String [CaseStmt] [Statement]
+    -- While loop
+    | While BoolExp Statement
+    -- For loop to
+    | ForUp String RealExp RealExp Statement
+    -- For loop downto
+    | ForDown String RealExp RealExp Statement
 
 data CaseStmt = Check GenExp Statement
 

@@ -1,28 +1,27 @@
 program test13;
 (* Test while loop, continue and break keywords in while loop *)
-var
-  a: real;
-  b: boolean;
+var a: real;
+var b: boolean;
 
 begin
   a := 10;
   while a < 20 do
   
   begin
-    writeln('value of a: ', a);
+    writeln(a);
     a := a + 1;
     while (a < 15) do 
     begin
-      writeln('hi');
+      writeln(15);
       a := a + 1;
-      continue;
-      writeln('You are not supposed to see this!');
+      // continue;
+      writeln(-1);
     end;
   end;
 
   while (a > 8) do
     a := a - 2;
-  writeln('value of a: ', a);
+  writeln(a);
 
   b := true;
   while (b) do
@@ -31,11 +30,11 @@ begin
       a := a - 1
     else
       b := false;
-    break;
+    // break;
   end;
 
-  writeln('value of a: ', a);
-  writeln('value of b: ', b);
+  writeln(a);
+  writeln(b);
 
 end.
 

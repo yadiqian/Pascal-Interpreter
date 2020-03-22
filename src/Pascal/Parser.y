@@ -53,7 +53,12 @@ import Pascal.Lexer
         'then'          { Token _ (TokenK "then") }
         'else'          { Token _ (TokenK "else") }
         'case'          { Token _ (TokenK "case") }
+        'while'         { Token _ (TokenK "while") }
+        'do'            { Token _ (TokenK "do") }
         'of'            { Token _ (TokenK "of") }
+        'for'           { Token _ (TokenK "for") }
+        'to'            { Token _ (TokenK "to") }
+        'downto'        { Token _ (TokenK "downto") }
         ';'             { Token _ (TokenK ";") }
         ':'             { Token _ (TokenK ":") }
         ','             { Token _ (TokenK ",") }
@@ -137,6 +142,10 @@ Statement :: {Statement}
     | 'writeln' '(' GenExp ')' { Print $3 }
     | 'if' BoolExp 'then' Block 'else' Block { If $2 $4 $6 }
     | 'case' '(' ID ')' 'of' CaseStmts 'else' Statements 'end' { Case $3 $6 $8 }
+    | Body { Block $1 }
+    | 'while' BoolExp 'do' Statement { While $2 $4 }
+    | 'for' ID ':=' RealExp 'to' RealExp 'do' Statement { ForUp $2 $4 $6 $8 }
+    | 'for' ID ':=' RealExp 'downto' RealExp 'do' Statement { ForDown $2 $4 $6 $8 }
 
 CaseStmts :: { [CaseStmt] }
     : { [] } 

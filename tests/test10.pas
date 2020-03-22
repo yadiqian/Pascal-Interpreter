@@ -5,21 +5,21 @@ var
   a, b, c: boolean;
 
 begin
-  writeln ('main block');
+  writeln (1);
   begin
-    writeln('A random code block');
+    writeln(2);
   end;
   begin
-    writeln('Another code block');
+    writeln(3);
     begin
-      writeln ('A code block within a code block');
+      writeln (4);
         begin
-          writeln ('Another nested block');
+          writeln (5);
         end;
     end;
   end;
   begin
-    writeln('The last code block');
+    writeln(6);
   end;
 end.
 
