@@ -9,7 +9,7 @@ begin
       writeln(a);
     end;
 
-  //  writeln();
+   writeln();
 
   for a := 10 * 5 downto 20 * 2 do  
     begin

@@ -21,7 +21,8 @@ module Pascal.Data
         Scope,
         FuncTable,
         toFloat,
-        toBool
+        toBool,
+        toString
     ) where
 
 import qualified Data.Map as Map
@@ -86,6 +87,10 @@ data Statement =
     | Block [Statement]
     -- writeln
     | Print GenExp
+    -- writeln with more than 1 argument
+    | PrintList [Param]
+    -- print new line
+    | PrintNewLine
     -- Case statement
     | Case String [CaseStmt] [Statement]
     -- While loop
@@ -145,3 +150,7 @@ toFloat (Float f) = f
 
 toBool :: ValueT -> Bool
 toBool (Bool b) = b
+
+toString :: ValueT -> String
+toString (Float f) = show f
+toString (Bool b) = show b

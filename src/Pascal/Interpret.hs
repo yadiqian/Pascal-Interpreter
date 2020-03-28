@@ -108,12 +108,25 @@ evalExp :: GenExp -> Scope -> FuncTable -> ValueT
 evalExp (FloatExp exp) scope table = evalRealExp exp scope table
 evalExp (BExp exp) scope table = evalBoolExp exp scope table
 
+printList :: [Param] -> Scope -> FuncTable -> String
+printList [exp] scope table = case exp of 
+  RealP e -> (toString $ evalExp (FloatExp e) scope table) ++ " "
+  BoolP e -> (toString $ evalExp (BExp e) scope table) ++ " "
+  StrP e -> (toString $ evalExp (FloatExp (VarReal e)) scope table) ++ " "
+printList (exp : tl) scope table = 
+  printList [exp] scope table ++ printList tl scope table 
+
 -- Evaluate statement
 parseStmt :: Statement -> Scope -> FuncTable -> (String, Scope)
 -- print statement
 parseStmt (Print exp) scope table = case evalExp exp scope table of
     Float f -> (show f ++ "\n", scope)
     Bool b -> (show b ++ "\n", scope)
+-- print statement with more than 1 argument
+parseStmt (PrintList list) scope table = 
+  ((printList list scope table) ++ "\n", scope)
+-- print new line
+parseStmt PrintNewLine scope table = ("\n", scope)
 -- assignment
 parseStmt (Assign name exp) scope table = ("", assignVal name (evalExp exp scope table) scope)
 -- if else statement
@@ -153,10 +166,13 @@ parseStmt _ scope _ = ("There is a problem", scope)
 executeFor :: String -> String -> String -> RealExp -> Statement -> Scope -> String -> FuncTable -> (String, Scope)
 executeFor op1 op2 var exp stmt scope str table = case value of
   Bool True -> let (newStr, newScope1) = parseStmt stmt scope table in 
-                let newScope2 = assignVal var (evalExp (FloatExp (Op2 op1 (Real varValue) (Integer 1))) newScope1 table) newScope1
-                    in executeFor op1 op2 var exp stmt newScope2 (str ++ newStr) table
+               case equal of 
+                    Bool True -> (str ++ newStr, newScope1)
+                    Bool False -> let newScope2 = assignVal var (evalExp (FloatExp (Op2 op1 (Real varValue) (Integer 1))) newScope1 table) newScope1
+                      in executeFor op1 op2 var exp stmt newScope2 (str ++ newStr) table
   Bool False -> (str, scope)
   where value = evalExp (BExp (Comp op2 (VarReal var) exp)) scope table
+        equal = evalExp (BExp (Comp "=" (VarReal var) exp)) scope table
         varValue = toFloat $ evalExp (FloatExp (VarReal var)) scope table
 
 -- Execute case statements 

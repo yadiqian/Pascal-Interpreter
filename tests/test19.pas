@@ -15,9 +15,9 @@ end;
 begin
   returnFive := 5 * 5;
 
-  writeln('Function return value is: ', returnTrue());
-  writeln('Function return value is: ', returnFive());
-  writeln('Variable value is: ', returnFive);
+  writeln(returnTrue());
+  writeln(returnFive());
+  writeln(returnFive);
 end.
 
 (*

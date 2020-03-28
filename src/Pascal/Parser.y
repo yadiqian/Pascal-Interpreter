@@ -87,6 +87,7 @@ Defs :: { Defs }
 Definition :: {Definition}
     : 'var' VarDef { Def $2 }
     | 'function' ID '(' Params ')' ':' Type ';' Defs Body { Func $2 $4 $9 $10 }
+    | 'function' ID ':' Type ';' Defs Body { Func $2 [] $6 $7 }
     | 'procedure' ID '(' Params2 Refs ')' ';' Defs Body { Proc $2 $4 $5 $8 $9 }
     | 'procedure' ID '(' Params ')' ';' Defs Body { Proc $2 $4 [] $7 $8 }
 
@@ -145,6 +146,7 @@ RealExp :: { RealExp }
     | 'ln' '(' RealExp ')' { Ln $3 }
     | 'exp' '(' RealExp ')' { Exp $3 }
     | ID '(' Param_list ')' { FuncReal $1 $3 } 
+    | ID '(' ')' { FuncReal $1 [] }
 
 BoolExp :: { BoolExp }
     : 'true' { True_C }
@@ -162,6 +164,7 @@ BoolExp :: { BoolExp }
     | RealExp '<>' RealExp { Comp "<>" $1 $3 }
     | ID { VarBool $1 }
     | ID '(' Param_list ')' { FuncBool $1 $3 }
+    | ID '(' ')' { FuncBool $1 [] }
 
 GenExp :: { GenExp }
     : RealExp { FloatExp $1 }
@@ -174,6 +177,8 @@ Statements :: {[Statement]}
 Statement :: {Statement}
     : ID ':=' GenExp { Assign $1 $3 }
     | 'writeln' '(' GenExp ')' { Print $3 }
+    | 'writeln' '(' Param_list ')' { PrintList $3 }
+    | 'writeln' '(' ')' { PrintNewLine }
     | 'if' BoolExp 'then' Statement 'else' Statement { IfElse $2 $4 $6 }
     | 'if' BoolExp 'then' Statement { If $2 $4 }
     | 'case' '(' ID ')' 'of' CaseStmts 'else' Statements 'end' { Case $3 $6 $8 }
@@ -182,6 +187,7 @@ Statement :: {Statement}
     | 'for' ID ':=' RealExp 'to' RealExp 'do' Statement { ForUp $2 $4 $6 $8 }
     | 'for' ID ':=' RealExp 'downto' RealExp 'do' Statement { ForDown $2 $4 $6 $8 }
     | ID '(' Param_list ')' { FuncCall $1 $3 }
+    | ID '(' ')' { FuncCall $1 [] }
 
 CaseStmts :: { [CaseStmt] }
     : { [] } 
