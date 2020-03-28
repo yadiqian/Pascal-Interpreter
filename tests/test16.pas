@@ -3,7 +3,7 @@ program test16;
 var a, b, c, min, rand: real;
 var test: boolean;
 
-procedure findMin(x, y, z: real; var m: real); 
+procedure findMin(x, y, z: real; var m, r: real; var n: boolean); 
 (* Finds the minimum of the 3 values *)
 
 begin
@@ -23,7 +23,7 @@ begin
   a := 100;
   b := 430;
   c := -11;
-  findMin(a, b, c, min); (* Procedure call *)
+  findMin(a, b, c, min, rand, test); (* Procedure call *)
   
   writeln(a);
   writeln(b);

@@ -87,7 +87,7 @@ Defs :: { Defs }
 Definition :: {Definition}
     : 'var' VarDef { Def $2 }
     | 'function' ID '(' Params ')' ':' Type ';' Defs Body { Func $2 $4 $9 $10 }
-    | 'procedure' ID '(' Params ';' Refs ')' ';' Defs Body { Proc $2 $4 $6 $9 $10 }
+    | 'procedure' ID '(' Params2 Refs ')' ';' Defs Body { Proc $2 $4 $5 $8 $9 }
     | 'procedure' ID '(' Params ')' ';' Defs Body { Proc $2 $4 [] $7 $8 }
 
 VarDef :: { VarDef }
@@ -96,6 +96,10 @@ VarDef :: { VarDef }
 Params :: { [VarDef] }
     : VarDef { [$1] }
     | VarDef ';' Params { $1 : $3 }
+
+Params2 :: { [VarDef] }
+    : { [] }
+    | VarDef ';' Params2 { $1 : $3 }
 
 Refs :: { [VarDef] }
     : 'var' VarDef { [$2] }
