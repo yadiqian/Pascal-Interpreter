@@ -1,42 +1,47 @@
 module Pascal.EvalReal 
 (
-    evalRealExp
+    -- evalRealExp
 ) 
 where
 
 import Pascal.Data
 import Pascal.Scope
+import Pascal.Function
 
 -- Evaluate real expressions
-evalRealExp :: RealExp -> Table -> ValueT
-evalRealExp (Real n) _ = Float n 
-evalRealExp (Integer n) _ = Float $ fromIntegral n 
+-- evalRealExp :: RealExp -> Scope -> FuncTable -> ValueT
+-- evalRealExp (Real n) _ _ = Float n 
+-- evalRealExp (Integer n) _ _ = Float $ fromIntegral n 
 
-evalRealExp (Op1 "-" e) table =  Float $ - toFloat (evalRealExp e table)
+-- evalRealExp (Op1 "-" e) scope table =  Float $ - toFloat (evalRealExp e scope table)
 
--- Addition
-evalRealExp (Op2 "+" e1 e2) table = 
-  Float (toFloat (evalRealExp e1 table) + toFloat (evalRealExp e2 table))
--- Subtraction
-evalRealExp (Op2 "-" e1 e2) table = 
-  Float (toFloat (evalRealExp e1 table) - toFloat (evalRealExp e2 table))
--- Multiplcation
-evalRealExp (Op2 "*" e1 e2) table = 
-  Float (toFloat (evalRealExp e1 table) * toFloat (evalRealExp e2 table))
--- Division
-evalRealExp (Op2 "/" e1 e2) table = 
-  Float (toFloat (evalRealExp e1 table) / toFloat (evalRealExp e2 table))
+-- -- Addition
+-- evalRealExp (Op2 "+" e1 e2) scope table = 
+--   Float (toFloat (evalRealExp e1 scope table) + toFloat (evalRealExp e2 scope table))
+-- -- Subtraction
+-- evalRealExp (Op2 "-" e1 e2) scope table = 
+--   Float (toFloat (evalRealExp e1 scope table) - toFloat (evalRealExp e2 scope table))
+-- -- Multiplcation
+-- evalRealExp (Op2 "*" e1 e2) scope table = 
+--   Float (toFloat (evalRealExp e1 scope table) * toFloat (evalRealExp e2 scope table))
+-- -- Division
+-- evalRealExp (Op2 "/" e1 e2) scope table = 
+--   Float (toFloat (evalRealExp e1 scope table) / toFloat (evalRealExp e2 scope table))
 
--- Variable
-evalRealExp (VarReal name) table = getVal name table
+-- -- square root
+-- evalRealExp (Sqrt e) scope table = Float (sqrt $ toFloat $ evalRealExp e scope table)
+-- -- sin
+-- evalRealExp (Sin e) scope table = Float (sin $ toFloat $ evalRealExp e scope table)
+-- -- cos
+-- evalRealExp (Cos e) scope table = Float (cos $ toFloat $ evalRealExp e scope table)
+-- -- natural log
+-- evalRealExp (Ln e) scope table = Float (log $ toFloat $ evalRealExp e scope table)
+-- -- exp
+-- evalRealExp (Exp e) scope table = Float (exp $ toFloat $ evalRealExp e scope table)
 
--- square root
-evalRealExp (Sqrt e) table = Float (sqrt $ toFloat $ evalRealExp e table)
--- sin
-evalRealExp (Sin e) table = Float (sin $ toFloat $ evalRealExp e table)
--- cos
-evalRealExp (Cos e) table = Float (cos $ toFloat $ evalRealExp e table)
--- natural log
-evalRealExp (Ln e) table = Float (log $ toFloat $ evalRealExp e table)
--- exp
-evalRealExp (Exp e) table = Float (exp $ toFloat $ evalRealExp e table)
+-- -- Variable
+-- evalRealExp (VarReal name) scope _ = getVal name scope
+
+-- Function
+-- evalRealExp (FuncReal name params) scope table = getVal name newScope
+--   where (str, newScope) = executeFunc name params scope table

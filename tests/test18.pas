@@ -9,8 +9,11 @@ begin
   b := b / 10;
   c := c / 10;
   
-  writeln('Winthin procedure display');
-  writeln('a = ', a , ' b = ',  b, ' c =', c);
+  // writeln('Winthin procedure display');
+  // writeln('a = ', a , ' b = ',  b, ' c =', c);
+  writeln(a);
+  writeln(b);
+  writeln(c);
 end;
 
 function displayFunc(a, b, c: real): real;
@@ -19,8 +22,11 @@ begin
   b := b / 100;
   c := c / 100;
   
-  writeln('Winthin functnion displayFunc');
-  writeln('a = ', a , ' b = ',  b, ' c = ', c);
+  // writeln('Winthin functnion displayFunc');
+  // writeln('a = ', a , ' b = ',  b, ' c = ', c);
+   writeln(a);
+  writeln(b);
+  writeln(c);
 
   displayFunc := c;
 end;
@@ -30,18 +36,27 @@ begin
   b:= 200;
   c:= a + b;
   
-  writeln('Winthin program test18');
-  writeln('a = ', a , ' b = ',  b, ' c = ', c);
+  // writeln('Winthin program test18');
+  // writeln('a = ', a , ' b = ',  b, ' c = ', c);
+   writeln(a);
+  writeln(b);
+  writeln(c);
   display(a, b, c);
 
   displayFunc(a, b, c);
 
-  writeln('Winthin program test18');
-  writeln('a = ', a , ' b = ',  b, ' c = ', c);
+  // writeln('Winthin program test18');
+  // writeln('a = ', a , ' b = ',  b, ' c = ', c);
+   writeln(a);
+  writeln(b);
+  writeln(c);
 
   c := displayFunc(a, b, c);
-  writeln('Winthin program test18');
-  writeln('a = ', a , ' b = ',  b, ' c = ', c);
+  // writeln('Winthin program test18');
+  // writeln('a = ', a , ' b = ',  b, ' c = ', c);
+   writeln(a);
+  writeln(b);
+  writeln(c);
 
 end.
 

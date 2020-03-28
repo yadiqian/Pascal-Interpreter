@@ -16,6 +16,10 @@ module Pascal.Data
         Table,
         Block(..),
         CaseStmt(..),
+        VarDef(..),
+        Param(..),
+        Scope,
+        FuncTable,
         toFloat,
         toBool
     ) where
@@ -46,6 +50,8 @@ data RealExp =
     | Ln RealExp
     -- exp
     | Exp RealExp
+    -- function
+    | FuncReal String [Param]
 
 -- Data-structure for boolean expressions
 data BoolExp = 
@@ -58,7 +64,10 @@ data BoolExp =
     -- true and false constants
     | True_C
     | False_C
+    -- variable
     | VarBool String
+    -- function
+    | FuncBool String [Param]
 
 data GenExp = 
   FloatExp RealExp 
@@ -69,8 +78,10 @@ data Statement =
     -- TODO: add other statements
     -- Variable assignment
     Assign String GenExp
+    -- If else statement
+    | IfElse BoolExp Statement Statement
     -- If statement
-    | If BoolExp Block Block
+    | If BoolExp Statement
     -- Block
     | Block [Statement]
     -- writeln
@@ -83,6 +94,8 @@ data Statement =
     | ForUp String RealExp RealExp Statement
     -- For loop downto
     | ForDown String RealExp RealExp Statement
+    -- Function call
+    | FuncCall String [Param]
 
 data CaseStmt = Check GenExp Statement
 
@@ -95,15 +108,26 @@ data ValueT =
 
 data Definition = 
     -- Variable definition, list of var, type
-    VarDef [String] VType
+    Def VarDef
+    -- Functions
+    | Func String [VarDef] [Definition] [Statement]
     -- Procedures
-    | Proc String [(String, VType)] Statement
+    | Proc String [VarDef] [VarDef] [Definition] [Statement]
+
+data VarDef =
+    VarDef [String] VType
 
 data Block = 
     Body Body 
     | Stmt Statement
 
 data Program = Process Defs Body
+
+data Param = 
+    RealP RealExp
+    | BoolP BoolExp
+    | StrP String 
+    -- | FuncP String [Param]
 
 -- Data-structure for hole program
 -- TODO: add declarations and other useful stuff
@@ -112,6 +136,8 @@ data Program = Process Defs Body
 type Defs = [Definition]
 type Body = [Statement]
 type Table = Map.Map String ValueT
+type FuncTable = Map.Map String ([VarDef], [VarDef], [Definition], [Statement])
+type Scope = [Table]
 
 -- Type conversion
 toFloat :: ValueT -> Float

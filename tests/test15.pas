@@ -29,10 +29,12 @@ begin
   b := 200.0;
   (* calling a function to get max value *)
   ret := max(400, 1020);
-  writeln( 'Max value is: ', ret );
+  // writeln( 'Max value is: ', ret );
+  writeln(ret);
 
   ret := max(a, b);   
-  writeln( 'Max value is: ', ret );
+  // writeln( 'Max value is: ', ret );
+  writeln(ret);
 
   writeln(xorVal(true, true, max(ret, 1010)));
 end.

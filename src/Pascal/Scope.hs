@@ -1,9 +1,13 @@
 module Pascal.Scope
 (
-    buildTable,
-    parseDef,
     getVal,
-    assignVal
+    assignVal,
+    addVar,
+    funcTable,
+    getVal,
+    addFunc,
+    getFunc,
+    emptyScope
 ) 
 where
 
@@ -11,23 +15,37 @@ import Pascal.Data
 
 import qualified Data.Map as Map
 
-parseDef :: Definition -> [(String, ValueT)] -> [(String, ValueT)]
-parseDef (VarDef [name] varType) list = case varType of
-  BOOL -> (name, (Bool False)) : list
-  REAL -> (name, (Float 0.0)) : list
-parseDef (VarDef (name : tl) varType) list = parseDef (VarDef [name] varType) list 
-  ++ parseDef (VarDef tl varType) list
+funcTable :: FuncTable
+funcTable = Map.empty
 
-buildTable :: [(String, ValueT)] -> Table
-buildTable list = Map.fromList list
+emptyScope :: Table
+emptyScope = Map.empty
+
+addFunc :: String -> [VarDef] -> [VarDef] -> [Definition] -> [Statement] -> FuncTable -> FuncTable
+addFunc name vars varRefs defs stmts table = Map.insert name (vars, varRefs, defs, stmts) table
+
+addVar :: String -> ValueT -> Scope -> Scope
+addVar name val [table] = [Map.insert name val table] 
+addVar name val (table : tl) = (Map.insert name val table) : tl
 
 lookupVal :: String -> Table -> Maybe ValueT
 lookupVal = Map.lookup
 
-assignVal :: String -> ValueT -> Table -> Table
-assignVal name value table = Map.insert name value table
+lookupFunc :: String -> FuncTable -> Maybe ([VarDef], [VarDef], [Definition], [Statement])
+lookupFunc = Map.lookup
 
-getVal :: String -> Table -> ValueT
-getVal name table = case (lookupVal name table) of 
+assignVal :: String -> ValueT -> Scope -> Scope
+assignVal name value [scope] = [Map.insert name value scope]
+assignVal name value (scope : tl) = (Map.insert name value scope) : tl
+ 
+getVal :: String -> Scope -> ValueT
+getVal name (scope : tl) = case (lookupVal name scope) of 
   Just n -> n
-  Nothing -> Float 0.0
+  Nothing -> getVal name tl
+getVal _ _ = Float 0.0
+
+getFunc :: String -> FuncTable -> ([VarDef], [VarDef], [Definition], [Statement])
+getFunc name table = case (lookupFunc name table) of 
+  Just val -> val
+  Nothing -> ([], [], [], [])
+getFunc _ _ = ([], [], [], [])

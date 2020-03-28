@@ -59,6 +59,10 @@ import Pascal.Lexer
         'for'           { Token _ (TokenK "for") }
         'to'            { Token _ (TokenK "to") }
         'downto'        { Token _ (TokenK "downto") }
+        'continue'      { Token _ (TokenK "continue") }
+        'break'         { Token _ (TokenK "break") }
+        'procedure'     { Token _ (TokenK "procedure") }
+        'function'      { Token _ (TokenK "function") }
         ';'             { Token _ (TokenK ";") }
         ':'             { Token _ (TokenK ":") }
         ','             { Token _ (TokenK ",") }
@@ -78,10 +82,24 @@ Program :: { Program }
 
 Defs :: { Defs }
     : { [] } -- nothing; make empty list
-    | Definition Defs { $1 : $2 } -- put definition as first element of defs
+    | Definition ';' Defs { $1 : $3 } -- put definition as first element of defs
 
 Definition :: {Definition}
-    : 'var' ID_list ':' Type ';' { VarDef $2 $4 }
+    : 'var' VarDef { Def $2 }
+    | 'function' ID '(' Params ')' ':' Type ';' Defs Body { Func $2 $4 $9 $10 }
+    | 'procedure' ID '(' Params ';' Refs ')' ';' Defs Body { Proc $2 $4 $6 $9 $10 }
+    | 'procedure' ID '(' Params ')' ';' Defs Body { Proc $2 $4 [] $7 $8 }
+
+VarDef :: { VarDef }
+    : ID_list ':' Type { VarDef $1 $3 }
+
+Params :: { [VarDef] }
+    : VarDef { [$1] }
+    | VarDef ';' Params { $1 : $3 }
+
+Refs :: { [VarDef] }
+    : 'var' VarDef { [$2] }
+    | 'var' VarDef ';' Refs { $2 : $4 }
 
 Type :: {VType}
     : 'boolean' { BOOL }
@@ -94,6 +112,16 @@ ID_list :: {[String]}
 -- Main code block
 Body :: {Body}
     : 'begin' Statements 'end' { $2 }
+
+Param_list :: {[Param]}
+    : Param {[$1]}
+    | Param ',' Param_list { $1 : $3 }
+
+Param :: { Param }
+    : ID { StrP $1 }
+    | RealExp { RealP $1 }
+    | BoolExp { BoolP $1 }
+    -- | ID Param_list { FuncP $1 $2 }
 
 -- Expressions
 RealExp :: { RealExp }
@@ -112,6 +140,7 @@ RealExp :: { RealExp }
     | 'cos' '(' RealExp ')' { Cos $3 }
     | 'ln' '(' RealExp ')' { Ln $3 }
     | 'exp' '(' RealExp ')' { Exp $3 }
+    | ID '(' Param_list ')' { FuncReal $1 $3 } 
 
 BoolExp :: { BoolExp }
     : 'true' { True_C }
@@ -128,6 +157,7 @@ BoolExp :: { BoolExp }
     | RealExp '<=' RealExp { Comp "<=" $1 $3 }
     | RealExp '<>' RealExp { Comp "<>" $1 $3 }
     | ID { VarBool $1 }
+    | ID '(' Param_list ')' { FuncBool $1 $3 }
 
 GenExp :: { GenExp }
     : RealExp { FloatExp $1 }
@@ -140,12 +170,14 @@ Statements :: {[Statement]}
 Statement :: {Statement}
     : ID ':=' GenExp { Assign $1 $3 }
     | 'writeln' '(' GenExp ')' { Print $3 }
-    | 'if' BoolExp 'then' Block 'else' Block { If $2 $4 $6 }
+    | 'if' BoolExp 'then' Statement 'else' Statement { IfElse $2 $4 $6 }
+    | 'if' BoolExp 'then' Statement { If $2 $4 }
     | 'case' '(' ID ')' 'of' CaseStmts 'else' Statements 'end' { Case $3 $6 $8 }
     | Body { Block $1 }
     | 'while' BoolExp 'do' Statement { While $2 $4 }
     | 'for' ID ':=' RealExp 'to' RealExp 'do' Statement { ForUp $2 $4 $6 $8 }
     | 'for' ID ':=' RealExp 'downto' RealExp 'do' Statement { ForDown $2 $4 $6 $8 }
+    | ID '(' Param_list ')' { FuncCall $1 $3 }
 
 CaseStmts :: { [CaseStmt] }
     : { [] } 

@@ -15,7 +15,7 @@ begin
   for i := 0 to 20 do 
   begin
     ret := fibonacci(i);
-    writeln(i,' ', ret);
+    writeln(ret);
   end;
 end.
 
