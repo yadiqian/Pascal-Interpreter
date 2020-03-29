@@ -252,5 +252,5 @@ getString (s, table) = s
 
 -- Evaluate program statements
 interpret :: Program -> String
-interpret (Process defs body) = getString $ processBody body scope funcTable
-  where (scope, funcTable) = processDefs defs [emptyScope] funcTable
+interpret (Process defs body) = getString $ processBody body scope table
+  where (scope, table) = processDefs defs [emptyScope] funcTable

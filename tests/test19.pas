@@ -23,8 +23,8 @@ end.
 (*
 Expected output:
 
-Function return value is: TRUE
-Function return value is: 5
-Variable value is: 25
+True
+5.0
+25.0
 
 *)

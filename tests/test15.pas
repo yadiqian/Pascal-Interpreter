@@ -20,8 +20,7 @@ end;
 
 function xorVal(a, b: boolean; c: real): boolean;
 begin
-  writeln(c);
-  xorVal := a xor b;
+  xorVal := a xor b; 
 end;
 
 begin
@@ -29,11 +28,9 @@ begin
   b := 200.0;
   (* calling a function to get max value *)
   ret := max(400, 1020);
-  // writeln( 'Max value is: ', ret );
   writeln(ret);
 
   ret := max(a, b);   
-  // writeln( 'Max value is: ', ret );
   writeln(ret);
 
   writeln(xorVal(true, true, max(ret, 1010)));
@@ -42,9 +39,8 @@ end.
 (*
 Expected output:
 
-Max value is: 1020
-Max value is: 200
-1010
-FALSE
+1020.0
+200.0
+False
 
 *)

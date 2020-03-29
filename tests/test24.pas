@@ -1,6 +1,5 @@
 program test24; 
 (* Test loops in procedure and function *)
-var ans: real;
 
 procedure print;
 var i: real;
@@ -31,37 +30,24 @@ end;
 
 begin
   print();
-  ans := sum();
-  writeln(ans);
+  writeln(sum());
 end.
 
 (*
 Expected output:
 
-0                                                                                                                       
-1                                                                                                                       
-2                                                                                                                       
-3                                                                                                                       
-4                                                                                                                       
-5                                                                                                                       
-5                                                                                                                       
-4                                                                                                                       
-3                                                                                                                       
-2                                                                                                                       
-1                                                                                                                       
-0                                                                                                                       
-0                                                                                                                       
-1                                                                                                                       
-2                                                                                                                       
-3                                                                                                                       
-4                                                                                                                       
-5                                                                                                                       
-5                                                                                                                       
-4                                                                                                                       
-3                                                                                                                       
-2                                                                                                                       
-1                                                                                                                       
-0                                                                                                                       
--1
+0.0
+1.0
+2.0
+3.0
+4.0
+5.0
+5.0
+4.0
+3.0
+2.0
+1.0
+0.0
+30.0
 
 *)

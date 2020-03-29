@@ -25,22 +25,19 @@ begin
   c := -11;
   findMin(a, b, c, min, rand, test); (* Procedure call *)
   
-  writeln(a);
-  writeln(b);
-  writeln(c);
+  writeln(a, b, c);
   writeln(min);
   writeln(rand);
   writeln(test);
 
-  writeln(m);
-  writeln(r);
-  writeln(n);
 end.
 
 (*
 Expected output:
 
-Minimum: -11
-TRUE
+100.0 430.0 -11.0 
+-11.0
+2020.0
+True
 
 *)
