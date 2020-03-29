@@ -1,34 +1,36 @@
 program test9;
-(* Test boolean operations with variables. *)
+(* Test nested code blocks. *)
 
 var
   a, b, c: boolean;
 
 begin
-  a := true;
-  b := false;
-  c:= a and b;
-  writeln (c);
-  c := not b and (a or b);
-  writeln (c);
-  c := a xor b;
-  writeln (c);
-  c := a xor true;
-  writeln (c);
-  c := c xor (b or not (a and b));
-  writeln (c);
-  c := not (a or b and (c xor b));
-  writeln (c);
+  writeln (1);
+  begin
+    writeln(2);
+  end;
+  begin
+    writeln(3);
+    begin
+      writeln (4);
+        begin
+          writeln (5);
+        end;
+    end;
+  end;
+  begin
+    writeln(6);
+  end;
 end.
 
 (*
 Expected output:
 
-FALSE                                                                
-TRUE                                                                 
-TRUE                                                                 
-FALSE                                                                
-TRUE
-FALSE
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
 
 *)

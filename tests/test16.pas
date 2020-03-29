@@ -1,43 +1,49 @@
 program test16;
-(* Test procedure *)
-var a, b, c, min, rand: real;
-var test: boolean;
+(* Test static scoping *)
+var
+  a, b, c: real;
 
-procedure findMin(x, y, z: real; var m, r: real; var n: boolean); 
-(* Finds the minimum of the 3 values *)
-
+procedure display(a, b, c: real);
 begin
-  if x < y then
-    m:= x
-  else
-    m:= y;
+  a := a / 10;
+  b := b / 10;
+  c := c / 10;
   
-  if z < m then
-    m := z;
+  writeln(a, b, c);
+end;
 
-  n := true;
-  r := 2020;
+function displayFunc(a, b, c: real): real;
+begin
+  a := a / 100;
+  b := b / 100;
+  c := c / 100;
+  
+  writeln(a, b, c);
+
+  displayFunc := c;
 end;
 
 begin
-  a := 100;
-  b := 430;
-  c := -11;
-  findMin(a, b, c, min, rand, test); (* Procedure call *)
+  a:= 100;
+  b:= 200;
+  c:= a + b;
   
   writeln(a, b, c);
-  writeln(min);
-  writeln(rand);
-  writeln(test);
+  display(a, b, c);
 
+  displayFunc(a, b, c);
+
+  c := displayFunc(a, b, c);
+  writeln(a, b, c);
 end.
 
 (*
 Expected output:
 
-100.0 430.0 -11.0 
--11.0
-2020.0
-True
+100.0 200.0 300.0 
+10.0 20.0 30.0 
+1.0 2.0 3.0
+1.0 2.0 3.0
+100.0 200.0 3.0
 
 *)

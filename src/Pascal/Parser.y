@@ -181,8 +181,11 @@ Statement :: {Statement}
     | 'writeln' '(' Param_list ')' { PrintList $3 }
     | 'writeln' '(' ')' { PrintNewLine }
     | 'if' BoolExp 'then' Statement 'else' Statement { IfElse $2 $4 $6 }
+    | 'if' '(' BoolExp ')' 'then' Statement 'else' Statement { IfElse $3 $6 $8 }
     | 'if' BoolExp 'then' Statement { If $2 $4 }
+    | 'if' '(' BoolExp ')' 'then' Statement { If $3 $6 }
     | 'case' '(' ID ')' 'of' CaseStmts 'else' Statements 'end' { Case $3 $6 $8 }
+    | 'case' ID 'of' CaseStmts 'else' Statements 'end' { Case $2 $4 $6 }
     | Body { Block $1 }
     | 'while' BoolExp 'do' Statement { While $2 $4 }
     | 'for' ID ':=' RealExp 'to' RealExp 'do' Statement { ForUp $2 $4 $6 $8 }

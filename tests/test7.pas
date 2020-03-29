@@ -1,35 +1,30 @@
 program test7;
 (* Test arithmetic operations with variables. *)
 
-var a, b, c, d, e: real;
-var f: boolean;
+var
+  a, b, c, d: real;
 
 begin
-  a := 5.55;
-  b := -18;
-  c := 77;
-  d := -(a * b) + c - b;
+  a := 5;
+  b := -10;
+  c := 3;
+  d := a - c + 1;
   writeln (d);
-  e:= -a + b * (d + a);
-  writeln (e);
-  writeln(d - c);
-  d:= d - c + (a * (b + (c - d)));
+  d := a + b * (d + a);
   writeln (d);
-  e := -exp(d) + -sin(a) / cos(b);
-  writeln (e);
-  e := a;
-  writeln (e);
-  f := true;
+  d := d - c + (a * (b + (c - d)));
+  writeln (d);
+  d := a / b * c + 14;
+  writeln (d);
+  d := d * d / (c / 2) * (a - 1);
 end.
 
 (*
 Expected output:
 
-194.9
--3613.65
-117.899994
--636.345
-1.0135132
-5.55
+3.0
+-75.0
+262.0
+12.5
 
 *)

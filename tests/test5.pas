@@ -30,7 +30,7 @@ begin
   end; 
 
   grade := -15;
-  case (grade) of
+  case grade of
     5: writeln(5);
     4: writeln(4);
     3: writeln(3);
@@ -51,12 +51,12 @@ begin
 end.
 
 (*
-Expected output (changed grade type from real to integer):
+Expected output:
 
-Excellent!                                                                                                                              
-You passed                                                           
-else1                                                                
-else2                                                                
-This is true
+5.0
+3.0
+1111.0
+2222.0
+True
 
 *)

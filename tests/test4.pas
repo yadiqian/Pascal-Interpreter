@@ -8,13 +8,11 @@ begin
   c := 3;
   b := true;
   if a - c = 2 then 
-    // writeln ('This is true')
     writeln(1)
   else 
     begin
       a := 7;
-      // writeln ('This is false');
-      writeln(-1);
+      writeln(0);
     end;
   writeln(a);
 
@@ -30,8 +28,8 @@ end.
 (*
 Expected output:
 
-This is true
-5
-0.1353352832366127
+1.0
+5.0
+0.13533528
 
 *)

@@ -1,46 +1,43 @@
 program test14;
-(* Test for loop *)
-var
-  a: real;
+(* Test procedure *)
+var a, b, c, min, rand: real;
+var test: boolean;
+
+procedure findMin(x, y, z: real; var m, r: real; var n: boolean); 
+(* Finds the minimum of the 3 values *)
 
 begin
-  for a := 10 to 20 do   
-    begin
-      writeln(a);
-    end;
+  if x < y then
+    m:= x
+  else
+    m:= y;
+  
+  if z < m then
+    m := z;
 
-   writeln();
+  n := true;
+  r := 2020;
+end;
 
-  for a := 10 * 5 downto 20 * 2 do  
-    begin
-      writeln(a / 2);
-    end;
+begin
+  a := 100;
+  b := 430;
+  c := -11;
+  findMin(a, b, c, min, rand, test); (* Procedure call *)
+  
+  writeln(a, b, c);
+  writeln(min);
+  writeln(rand);
+  writeln(test);
+
 end.
 
 (*
 Expected output:
 
-value of a: 10                                                                                                          
-value of a: 11                                                                                                          
-value of a: 12                                                                                                          
-value of a: 13                                                                                                          
-value of a: 14                                                                                                          
-value of a: 15                                                                                                          
-value of a: 16                                                                                                          
-value of a: 17                                                                                                          
-value of a: 18                                                                                                          
-value of a: 19                                                                                                          
-value of a: 20                                                                                                          
-                                                                                                                        
-value of a: 25
-value of a: 24.5
-value of a: 24
-value of a: 23.5
-value of a: 23
-value of a: 22.5
-value of a: 22
-value of a: 21.5
-value of a: 21
-value of a: 20.5
-value of a: 20
+100.0 430.0 -11.0 
+-11.0
+2020.0
+True
+
 *)

@@ -18,8 +18,8 @@ end.
 (*
 Expected Output:
 
-8.555                                              
-FALSE                                                                
-TRUE
+8.555
+False
+True
 
 *)

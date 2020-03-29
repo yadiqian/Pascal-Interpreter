@@ -1,36 +1,19 @@
-program test7;
-(* Test nested code blocks. *)
-
-var
-  a, b, c: boolean;
+program test10;
+(* Calculates distance formula. *)
+var x1, y1, x2, y2, ans: real;
 
 begin
-  writeln (1);
-  begin
-    writeln(2);
-  end;
-  begin
-    writeln(3);
-    begin
-      writeln (4);
-        begin
-          writeln (5);
-        end;
-    end;
-  end;
-  begin
-    writeln(6);
-  end;
+  x1 := 14.11;
+  x2 := -6.5;
+  y1 := -4.5;
+  y2 := 89;
+  ans := sqrt((x1 - x1) * (x1 - x1) + (y1 - y2) * (y1 - y2));
+  writeln (ans);
 end.
 
 (*
 Expected output:
 
-main block                                                           
-A random code block                                                  
-Another code block                                                   
-A code block within a code block                                    
-Another nested block                                                 
-The last code block
+93.5
 
 *)

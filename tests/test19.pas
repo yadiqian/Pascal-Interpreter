@@ -1,30 +1,53 @@
-program test19;
-(* Test function and procedure without parameters *)
-var returnFive: real;
+program test19; 
+(* Test loops in procedure and function *)
 
-function returnTrue: boolean;
+procedure print;
+var i: real;
 begin
-  returnTrue := true;
+  for i := 0 to 5 do
+    writeln(i);
+
+  while i >= 0 do
+  begin
+    writeln(i);
+    i := i - 1;
+  end;
 end;
 
-function returnFive: real;
+function sum: real;
+var i, ret: real;
 begin
-  returnFive := 5;
+  for i := 0 to 5 do
+  ret := ret + i;
+
+  while i >= 0 do
+  begin
+    ret := ret + i;
+    i := i - 1;
+  end;
+  sum := ret;
 end;
 
 begin
-  returnFive := 5 * 5;
-
-  writeln(returnTrue());
-  writeln(returnFive());
-  writeln(returnFive);
+  print();
+  writeln(sum());
 end.
 
 (*
 Expected output:
 
-True
+0.0
+1.0
+2.0
+3.0
+4.0
 5.0
-25.0
+5.0
+4.0
+3.0
+2.0
+1.0
+0.0
+30.0
 
 *)
