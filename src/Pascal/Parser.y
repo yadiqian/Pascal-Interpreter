@@ -90,6 +90,7 @@ Definition :: {Definition}
     | 'function' ID ':' Type ';' Defs Body { Func $2 [] $6 $7 }
     | 'procedure' ID '(' Params2 Refs ')' ';' Defs Body { Proc $2 $4 $5 $8 $9 }
     | 'procedure' ID '(' Params ')' ';' Defs Body { Proc $2 $4 [] $7 $8 }
+    | 'procedure' ID ';' Defs Body { Proc $2 [] [] $4 $5 }
 
 VarDef :: { VarDef }
     : ID_list ':' Type { VarDef $1 $3 }

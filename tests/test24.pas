@@ -1,6 +1,6 @@
 program test24; 
 (* Test loops in procedure and function *)
-var count: real;
+var ans: real;
 
 procedure print;
 var i: real;
@@ -15,25 +15,24 @@ begin
   end;
 end;
 
-function count: real;
-var i: real;
+function sum: real;
+var i, ret: real;
 begin
   for i := 0 to 5 do
-    writeln(i);
+  ret := ret + i;
 
   while i >= 0 do
   begin
-    writeln(i);
+    ret := ret + i;
     i := i - 1;
   end;
-
-  count := i;
+  sum := ret;
 end;
 
 begin
   print();
-  count := count();
-  writeln(count);
+  ans := sum();
+  writeln(ans);
 end.
 
 (*
