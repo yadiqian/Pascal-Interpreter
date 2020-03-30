@@ -33,7 +33,7 @@ then run
 ```
 runhaskell spec/DataSpec.hs; runhaskell spec/FunctionSpec.hs; runhaskell spec/InterpretSpec.hs; runhaskell spec/ScopeSpec.hs
 ```
-All the unit test files reside inside the ```Spec``` directory.
+All unit test files reside inside the ```src/Spec``` directory.
 
 ## Notes
 My interpreter is also able to handle
