@@ -1,4 +1,4 @@
-# Pascal Interpreter in Haskell with Happy and Alex
+# Pascal Interpreter
 
 Author: Yadi Qian
 
