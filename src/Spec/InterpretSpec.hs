@@ -11,10 +11,10 @@ import qualified Data.Map as Map
 main :: IO ()
 
 scope :: [Table]
-scope = [Map.fromList [("a", (Bool True)), ("b", (Float 0.5))]]
+scope = [Map.fromList [("a", (Bool True)), ("b", (Float 1.0))]]
 
 scopeInsert :: [Table]
-scopeInsert = [Map.fromList [("a", (Bool True)), ("b", (Float 0.5)), ("c", (Float (-1.1)))]]
+scopeInsert = [Map.fromList [("a", (Bool True)), ("b", (Float 1.0)), ("c", (Float (-1.1)))]]
 
 table :: FuncTable
 table = Map.fromList [
@@ -75,7 +75,7 @@ main = hspec $ do
         evalBoolExp (Comp "<>" (Integer 4) (Integer 4)) [] funcTable "" `shouldBe` (Bool False, "")
     it "Evaluates variable" $ do
         evalBoolExp (VarBool "a") scope funcTable "" `shouldBe` (Bool True, "")
-        evalBoolExp (VarBool "b") scope funcTable "" `shouldBe` (Float 0.5, "")
+        evalBoolExp (VarBool "b") scope funcTable "" `shouldBe` (Float 1.0, "")
     it "Evaluates function" $ do
         evalBoolExp (FuncBool "funcB" []) scope table "" `shouldBe` (Bool True, "")
         evalBoolExp (FuncBool "funcR" []) scope table "" `shouldBe` (Float (-0.7), "3.0\n")
@@ -138,7 +138,7 @@ main = hspec $ do
           evalRealExp (Exp (Real (3.3))) [] funcTable "" `shouldBe` ((Float (exp 3.3)), "")
     it "Evaluates variable" $ do
         evalRealExp (VarReal "a") scope funcTable "" `shouldBe` (Bool True, "")
-        evalRealExp (VarReal "b") scope funcTable "" `shouldBe` (Float 0.5, "")
+        evalRealExp (VarReal "b") scope funcTable "" `shouldBe` (Float 1.0, "")
     it "Evaluates function" $ do
         evalRealExp (FuncReal "funcB" []) scope table "" `shouldBe` (Bool True, "")
         evalRealExp (FuncReal "funcR" []) scope table "" `shouldBe` (Float (-0.7), "3.0\n")
@@ -147,9 +147,9 @@ main = hspec $ do
     it "Returns print string" $ do
       parseStmt (Print (FloatExp $ Real 1.5)) [] funcTable `shouldBe` ("1.5\n", [])
       parseStmt (Print (BExp True_C)) [] funcTable `shouldBe` ("True\n", [])
-      parseStmt (Print (FloatExp $ VarReal "b")) scope funcTable `shouldBe` ("0.5\n", scope)
+      parseStmt (Print (FloatExp $ VarReal "b")) scope funcTable `shouldBe` ("1.0\n", scope)
     it "Returns print string list" $ do
-      parseStmt (PrintList [(RealP $ Real 1.5), (BoolP True_C), (StrP "b")]) scope funcTable `shouldBe` ("1.5 True 0.5 \n", scope)
+      parseStmt (PrintList [(RealP $ Real 1.5), (BoolP True_C), (StrP "b")]) scope funcTable `shouldBe` ("1.5 True 1.0 \n", scope)
     it "Returns a new line" $ do
       parseStmt PrintNewLine [] funcTable `shouldBe` ("\n", [])
     it "Assigns value to variable" $ do
@@ -166,3 +166,76 @@ main = hspec $ do
         parseStmt (IfElse (Comp "<>" (Real 5.0) (Real 5.0)) (Print (BExp True_C)) (Print (BExp False_C))) [] funcTable `shouldBe` ("False\n", [])
         parseStmt (IfElse (Comp "=" (Real 5.0) (Real 5.1)) (Print (BExp True_C)) (Print (BExp False_C))) [] funcTable `shouldBe` ("False\n", [])
         parseStmt (IfElse (Comp "<=" (Real 6.0) (Real 5.0)) (Print (BExp True_C)) (Print (BExp False_C))) [] funcTable `shouldBe` ("False\n", [])
+    
+    it "Executes if statement" $ do
+      parseStmt (If False_C (Print (BExp True_C))) [] funcTable `shouldBe` ("", [])
+      parseStmt (If (Comp "=" (Real 5.0) (Real 5.0)) (Print (BExp True_C))) [] funcTable `shouldBe` ("True\n", [])
+      parseStmt (If (Comp "<>" (Real 5.0) (Real 5.1)) (Print (BExp True_C))) [] funcTable `shouldBe` ("True\n", [])
+      parseStmt (If (Comp "<=" (Real 6.0) (Real 5.0)) (Print (BExp True_C))) [] funcTable `shouldBe` ("", [])
+
+    it "Executes case statement" $ do
+      parseStmt (Case "a" [(Check (BExp True_C) (Print (BExp True_C))), (Check (BExp False_C) (Print (BExp False_C)))] []) scope funcTable `shouldBe` ("True\n", scope)
+      parseStmt (Case "a" [(Check (BExp False_C) (Print (BExp True_C)))] [(Print (BExp False_C))]) scope funcTable `shouldBe` ("False\n", scope)
+      parseStmt (Case "b" [(Check (FloatExp $ Real 0.1) (Print (BExp True_C))), (Check (FloatExp $ Real 0.2) (Print (BExp True_C)))] [(Print (BExp False_C))]) scope funcTable 
+        `shouldBe` ("False\n", scope)
+      parseStmt (Case "b" [(Check (FloatExp $ Real 0.1) (Print (BExp True_C))), (Check (FloatExp $ Real 1.0) (Print (FloatExp $ Real 1.0)))] [(Print (BExp False_C))]) scope funcTable 
+        `shouldBe` ("1.0\n", scope)
+
+    it "Executes block statements" $ do
+      parseStmt (Block [(Print (BExp True_C)), (Print (BExp False_C)), (Print (FloatExp $ Real 1.0))]) [] funcTable `shouldBe` ("True\nFalse\n1.0\n", [])
+
+    it "Executes while loop" $ do
+      parseStmt (While (Comp "<" (VarReal "b") (Real 5.0)) (Block [(Print (BExp True_C)), (Assign "b" (FloatExp $ Op2 "+" (Real 1.0) (VarReal "b")))])) scope funcTable 
+        `shouldBe` ("True\nTrue\nTrue\nTrue\n", [Map.fromList [("a",Bool True),("b",Float 5.0)]])
+
+    it "Executes incrementing for loop" $ do 
+      parseStmt (ForUp "b" (Real 0.0) (Real 4.0) (Print (FloatExp $ VarReal "b"))) scope funcTable
+        `shouldBe` ("0.0\n1.0\n2.0\n3.0\n4.0\n", [Map.fromList [("a",Bool True),("b",Float 4.0)]])
+      parseStmt (ForUp "b" (Real (-5.0)) (Real (-1.0)) (Print (FloatExp $ VarReal "b"))) scope funcTable
+        `shouldBe` ("-5.0\n-4.0\n-3.0\n-2.0\n-1.0\n", [Map.fromList [("a",Bool True),("b",Float (-1.0))]])
+
+    it "Executes decrementing for loop" $ do 
+      parseStmt (ForDown "b" (Real 4.0) (Real 0.0) (Print (FloatExp $ VarReal "b"))) scope funcTable
+        `shouldBe` ("4.0\n3.0\n2.0\n1.0\n0.0\n", [Map.fromList [("a",Bool True),("b",Float 0.0)]])
+      parseStmt (ForDown "b" (Real (-1.0)) (Real (-5.0)) (Print (FloatExp $ VarReal "b"))) scope funcTable
+        `shouldBe` ("-1.0\n-2.0\n-3.0\n-4.0\n-5.0\n", [Map.fromList [("a",Bool True),("b",Float (-5.0))]])
+  
+  describe "executeFor" $ do
+    it "Executes for loop" $ do
+      executeFor "+" "<=" "b" (Real 4.0) (Print (FloatExp $ VarReal "b")) scope "" funcTable
+        `shouldBe` ("1.0\n2.0\n3.0\n4.0\n", [Map.fromList [("a",Bool True),("b",Float 4.0)]])
+      executeFor "-" ">=" "b" (Real (-2.0)) (Print (FloatExp $ VarReal "b")) scope "" funcTable
+        `shouldBe` ("1.0\n0.0\n-1.0\n-2.0\n", [Map.fromList [("a",Bool True),("b",Float (-2.0))]])
+
+  describe "executeCase" $ do
+    it "Executes case statements" $ do
+      executeCase "a" [(Check (BExp True_C) (Print (BExp True_C))), (Check (BExp False_C) (Print (BExp False_C)))] scope funcTable False
+        `shouldBe` (("True\n", scope), True)
+      executeCase "b" [(Check (FloatExp $ Real 0.1) (Print (BExp True_C))), (Check (FloatExp $ Real 0.2) (Print (BExp True_C)))] scope funcTable False
+        `shouldBe` (("", scope), False)
+
+  describe "executeWhile" $ do
+    it "Executes while loop" $ do
+      executeWhile (Comp "<" (VarReal "b") (Real 5.0)) (Block [(Print (BExp True_C)), (Assign "b" (FloatExp $ Op2 "+" (Real 1.0) (VarReal "b")))]) scope "\n" funcTable
+        `shouldBe` ("\nTrue\nTrue\nTrue\nTrue\n", [Map.fromList [("a",Bool True),("b",Float 5.0)]])
+  
+  describe "addScope" $ do
+    it "Adds a new scope" $ do
+      addScope [] [] scope funcTable `shouldBe` ((emptyScope : scope), "")
+      addScope [(VarDef ["age"] REAL)] [(RealP $ Real 18)] [] funcTable
+        `shouldBe` ((Map.fromList [("age", Float 18.0)]) : [], "")
+  
+  describe "addRefs" $ do
+    it "Adds variables by refenrence" $ do
+      addRefs [] scope `shouldBe` scope
+      addRefs [(VarDef ["age"] REAL)] scope `shouldBe` [Map.fromList [("a",Bool True),("age",Float 0.0),("b",Float 1.0)]]
+
+  describe "addParams" $ do
+    it "Adds variables to new scope" $ do
+      addParams [] [] scope funcTable "" `shouldBe` (scope, "")
+      addParams ["age"] [RealP $ Real 8.0] scope funcTable "msg" `shouldBe` ([Map.fromList [("a",Bool True),("age",Float 8.0),("b",Float 1.0)]], "msg")
+      addParams ["student"] [BoolP True_C] scope funcTable "msg" `shouldBe` ([Map.fromList [("a",Bool True),("student",Bool True),("b",Float 1.0)]], "msg")
+      addParams ["age"] [StrP "b"] scope funcTable "msg" `shouldBe` ([Map.fromList [("a",Bool True),("age",Float 1.0),("b",Float 1.0)]], "msg") 
+      addParams ["age", "student"] [StrP "b", BoolP False_C] scope funcTable "msg" 
+        `shouldBe` ([Map.fromList [("a",Bool True),("age",Float 1.0),("b",Float 1.0), ("student",Bool False)]], "msg") 
+        
