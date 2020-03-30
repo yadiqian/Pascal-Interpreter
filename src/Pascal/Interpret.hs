@@ -56,7 +56,7 @@ evalBoolExp (Comp "<>" e1 e2) scope table str = (Bool (val1 /= val2), str1 ++ st
 evalBoolExp (VarBool name) scope _ str = (getVal name scope, str)
 
 -- Function
-evalBoolExp (FuncBool name params) scope table str = (getVal name newScope, newStr)
+evalBoolExp (FuncBool name params) scope table _ = (getVal name newScope, newStr)
   where (newStr, newScope) = executeFunc name params scope table
 
 
@@ -109,7 +109,7 @@ evalRealExp (Exp e) scope table str = (Float (exp val), newStr)
 evalRealExp (VarReal name) scope _ str = (getVal name scope, str)
 
 -- Function
-evalRealExp (FuncReal name params) scope table str = (getVal name newScope, newStr)
+evalRealExp (FuncReal name params) scope table _ = (getVal name newScope, newStr)
   where (newStr, newScope) = executeFunc name params scope table
 
 
@@ -137,7 +137,7 @@ parseStmt (Print exp) scope table = case val of
 parseStmt (PrintList list) scope table = 
   ((printList list scope table) ++ "\n", scope)
 -- print new line
-parseStmt PrintNewLine scope table = ("\n", scope)
+parseStmt PrintNewLine scope _ = ("\n", scope)
 -- assignment
 parseStmt (Assign name exp) scope table = (str, assignVal name val scope)
   where (val, str) = evalExp exp scope table
@@ -214,13 +214,13 @@ executeFunc name params scope table = (str1 ++ str2, newScope5)
   where (vars, varRefs, defs, stmts) = getFunc name table
         (newScope1, str1) = addScope vars params scope table
         newScope2 = addRefs varRefs newScope1 
-        (newScope3, newTable) = processDefs defs newScope2 table
+        (newScope3, _) = processDefs defs newScope2 table
         (str2, newScope4) = processBody stmts newScope3 table
         refs = refsToStrs varRefs []
         varNames = case refs of
           [] -> [StrP name]
           otherwise -> lastN (length refs) params
-        (cur : newScope5) = endScope varNames refs newScope4
+        (_ : newScope5) = endScope varNames refs newScope4
 
 -- Add new scope
 addScope :: [VarDef] -> [Param] -> Scope -> FuncTable -> (Scope, String)
@@ -245,12 +245,12 @@ addParams [name] [BoolP param] scope table str = (assignVal name value scope, st
   where (value, newStr) = evalBoolExp param scope table ""
 addParams (name : names) (param : params) scope table str = addParams names params newScope table newStr
   where (newScope, newStr) = addParams [name] [param] scope table str
-addParams [] params scope _ str = (scope, str)
+addParams [] _ scope _ str = (scope, str)
 addParams _ _ scope _ str = (scope, str)
 
 -- Process statements
 processBody :: Body -> Scope -> FuncTable -> (String, Scope)
-processBody [] scope table  = ("", scope)
+processBody [] scope _  = ("", scope)
 processBody [stmt] scope table = parseStmt stmt scope table
 processBody (stmt : tl) scope table = (str1 ++ str2, newTable2)
   where (str1, newTable1) = processBody [stmt] scope table
@@ -259,7 +259,7 @@ processBody (stmt : tl) scope table = (str1 ++ str2, newTable2)
 processDefs :: Defs -> Scope -> FuncTable -> (Scope, FuncTable)
 processDefs [] scope table = (scope, table)
 -- Process variable definitions
-processDefs [Def (VarDef vars varType)] scope table = (newScope, funcTable)
+processDefs [Def (VarDef vars varType)] scope _ = (newScope, funcTable)
   where newScope = storeDef vars varType scope
 -- Process function definitions
 processDefs [Func name vars defs stmts] scope table = (scope, newTable)
@@ -268,11 +268,11 @@ processDefs [Func name vars defs stmts] scope table = (scope, newTable)
 processDefs [Proc name vars varRefs defs stmts] scope table = (scope, newTable)
   where newTable = addFunc name vars varRefs defs stmts table 
 
-processDefs (def : tl) scope funcTable = processDefs tl newScope newTable
-  where (newScope, newTable) = processDefs [def] scope funcTable
+processDefs (def : tl) scope table = processDefs tl newScope newTable
+  where (newScope, newTable) = processDefs [def] scope table
 
 getString :: (String, Scope) -> String
-getString (s, table) = s
+getString (s, _) = s
 
 -- Evaluate program statements
 interpret :: Program -> String

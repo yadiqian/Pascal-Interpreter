@@ -154,9 +154,11 @@ type Scope = [Table]
 -- Type conversion
 toFloat :: ValueT -> Float
 toFloat (Float f) = f
+toFloat _ = error("Value cannot be converted to float")
 
 toBool :: ValueT -> Bool
 toBool (Bool b) = b
+toBool _ = error("Value cannot be converted to bool")
 
 toString :: ValueT -> String
 toString (Float f) = show f

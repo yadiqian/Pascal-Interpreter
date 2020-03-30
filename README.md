@@ -31,7 +31,7 @@ cd src
 ```
 then run
 ```
-runhaskell spec/FunctionSpec.hs; runhaskell spec/InterpretSpec.hs; runhaskell spec/ScopeSpec.hs
+runhaskell spec/DataSpec.hs; runhaskell spec/FunctionSpec.hs; runhaskell spec/InterpretSpec.hs; runhaskell spec/ScopeSpec.hs
 ```
 All the unit test files reside inside the ```Spec``` directory.
 
