@@ -1,8 +1,4 @@
-module Pascal.Interpret 
-(
-    interpret
-)
-where
+module Pascal.Interpret where
 
 import Pascal.Data
 import Pascal.Scope
@@ -16,41 +12,41 @@ evalBoolExp True_C _ _ str = (Bool True , str)
 evalBoolExp False_C _ _ str = (Bool False, str) 
 
 -- and
-evalBoolExp (OpB "and" e1 e2) scope table str = (Bool (and [toBool val1, toBool val2]), str1 ++ str2) 
-  where (val1, str1) = evalBoolExp e1 scope table str
-        (val2, str2) = evalBoolExp e2 scope table str
+evalBoolExp (OpB "and" e1 e2) scope table str = (Bool (and [val1, val2]), str1 ++ str2) 
+  where (Bool val1, str1) = evalBoolExp e1 scope table str
+        (Bool val2, str2) = evalBoolExp e2 scope table str
 -- or
-evalBoolExp (OpB "or" e1 e2) scope table str = (Bool (or [toBool val1, toBool val2]), str1 ++ str2) 
-  where (val1, str1) = evalBoolExp e1 scope table str
-        (val2, str2) = evalBoolExp e2 scope table str
+evalBoolExp (OpB "or" e1 e2) scope table str = (Bool (or [val1, val2]), str1 ++ str2) 
+  where (Bool val1, str1) = evalBoolExp e1 scope table str
+        (Bool val2, str2) = evalBoolExp e2 scope table str
 -- xor
 evalBoolExp (OpB "xor" e1 e2) scope table str = (Bool (val1 /= val2), str1 ++ str2) 
   where (val1, str1) = evalBoolExp e1 scope table str
         (val2, str2) = evalBoolExp e2 scope table str
 -- not
-evalBoolExp (Not e) scope table str = (Bool (not $ toBool val), newStr)
-  where (val, newStr) = evalBoolExp e scope table str
+evalBoolExp (Not e) scope table str = (Bool (not val), newStr)
+  where (Bool val, newStr) = evalBoolExp e scope table str
 
 -- Evaluate comparison
-evalBoolExp (Comp ">" e1 e2) scope table str = (Bool (toFloat val1 > toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalBoolExp (Comp ">" e1 e2) scope table str = (Bool (val1 > val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 
-evalBoolExp (Comp "<" e1 e2) scope table str = (Bool (toFloat val1 < toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalBoolExp (Comp "<" e1 e2) scope table str = (Bool (val1 < val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
   
-evalBoolExp (Comp "=" e1 e2) scope table str = (Bool (toFloat val1 == toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalBoolExp (Comp "=" e1 e2) scope table str = (Bool (val1 == val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 
-evalBoolExp (Comp ">=" e1 e2) scope table str = (Bool (toFloat val1 >= toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalBoolExp (Comp ">=" e1 e2) scope table str = (Bool (val1 >= val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 
-evalBoolExp (Comp "<=" e1 e2) scope table str = (Bool (toFloat val1 <= toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalBoolExp (Comp "<=" e1 e2) scope table str = (Bool (val1 <= val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 
 evalBoolExp (Comp "<>" e1 e2) scope table str = (Bool (val1 /= val2), str1 ++ str2)
   where (val1, str1) = evalRealExp e1 scope table str
@@ -73,37 +69,41 @@ evalRealExp (Op1 "-" e) scope table str =  (Float $ - toFloat val, newStr)
   where (val, newStr) = evalRealExp e scope table str
 
 -- Addition
-evalRealExp (Op2 "+" e1 e2) scope table str = (Float (toFloat val1 + toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalRealExp (Op2 "+" e1 e2) scope table str = (Float (val1 + val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 -- Subtraction
-evalRealExp (Op2 "-" e1 e2) scope table str = (Float (toFloat val1 - toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalRealExp (Op2 "-" e1 e2) scope table str = (Float (val1 - val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 -- Multiplcation
-evalRealExp (Op2 "*" e1 e2) scope table str = (Float (toFloat val1 * toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalRealExp (Op2 "*" e1 e2) scope table str = (Float (val1 * val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 -- Division
-evalRealExp (Op2 "/" e1 e2) scope table str = (Float (toFloat val1 / toFloat val2), str1 ++ str2)
-  where (val1, str1) = evalRealExp e1 scope table str
-        (val2, str2) = evalRealExp e2 scope table str
+evalRealExp (Op2 "/" e1 e2) scope table str = case val2 of
+  0.0 -> error("Cannot divide by 0")
+  otherwise -> (Float (val1 / val2), str1 ++ str2)
+  where (Float val1, str1) = evalRealExp e1 scope table str
+        (Float val2, str2) = evalRealExp e2 scope table str
 
 -- square root
-evalRealExp (Sqrt e) scope table str = (Float (sqrt $ toFloat val), newStr)
-  where (val, newStr) = evalRealExp e scope table str
+evalRealExp (Sqrt e) scope table str = case (val < 0) of
+  True -> error("Cannot square root negative numbers")
+  False -> (Float (sqrt val), newStr)
+  where (Float val, newStr) = evalRealExp e scope table str
 -- sin
-evalRealExp (Sin e) scope table str = (Float (sin $ toFloat val), newStr)
-  where (val, newStr) = evalRealExp e scope table str
+evalRealExp (Sin e) scope table str = (Float (sin val), newStr)
+  where (Float val, newStr) = evalRealExp e scope table str
 -- cos
-evalRealExp (Cos e) scope table str = (Float (cos $ toFloat val), newStr)
-  where (val, newStr) = evalRealExp e scope table str
+evalRealExp (Cos e) scope table str = (Float (cos val), newStr)
+  where (Float val, newStr) = evalRealExp e scope table str
 -- natural log
-evalRealExp (Ln e) scope table str = (Float (log $ toFloat val), newStr)
-  where (val, newStr) = evalRealExp e scope table str
+evalRealExp (Ln e) scope table str = (Float (log val), newStr)
+  where (Float val, newStr) = evalRealExp e scope table str
 -- exp
-evalRealExp (Exp e) scope table str = (Float (exp $ toFloat val), newStr)
-  where (val, newStr) = evalRealExp e scope table str
+evalRealExp (Exp e) scope table str = (Float (exp val), newStr)
+  where (Float val, newStr) = evalRealExp e scope table str
 
 -- Variable
 evalRealExp (VarReal name) scope _ str = (getVal name scope, str)
@@ -173,8 +173,6 @@ parseStmt (ForDown name exp1 exp2 stmt) scope table =
 
 parseStmt (FuncCall name vars) scope table = executeFunc name vars scope table 
 
-parseStmt _ scope _ = ("There is a problem", scope)
-
 
 -- Execute for loop
 executeFor :: String -> String -> String -> RealExp -> Statement -> Scope -> String -> FuncTable -> (String, Scope)
@@ -212,12 +210,12 @@ executeWhile boolExp stmt scope str table = case value of
 
 -- Execute functions or procedures
 executeFunc :: String -> [Param] -> Scope -> FuncTable -> (String, Scope)
-executeFunc name params scope table = (str, newScope5)
+executeFunc name params scope table = (str1 ++ str2, newScope5)
   where (vars, varRefs, defs, stmts) = getFunc name table
-        newScope1 = addScope vars params scope table
+        (newScope1, str1) = addScope vars params scope table
         newScope2 = addRefs varRefs newScope1 
         (newScope3, newTable) = processDefs defs newScope2 table
-        (str, newScope4) = processBody stmts newScope3 table
+        (str2, newScope4) = processBody stmts newScope3 table
         refs = refsToStrs varRefs []
         varNames = case refs of
           [] -> [StrP name]
@@ -225,10 +223,10 @@ executeFunc name params scope table = (str, newScope5)
         (cur : newScope5) = endScope varNames refs newScope4
 
 -- Add new scope
-addScope :: [VarDef] -> [Param] -> Scope -> FuncTable -> Scope
-addScope [] [] scope _ = (emptyScope : scope)
+addScope :: [VarDef] -> [Param] -> Scope -> FuncTable -> (Scope, String)
+addScope [] [] scope _ = ((emptyScope : scope), "")
 addScope vars params scope table =
-  addParams (refsToStrs vars []) params (emptyScope : scope) table
+  addParams (refsToStrs vars []) params (emptyScope : scope) table ""
 
 -- Add referenced var to new scope
 addRefs :: [VarDef] -> Scope -> Scope
@@ -238,20 +236,21 @@ addRefs (ref : tl) scope = addRefs tl newScope
   where newScope = addRefs [ref] scope
 
 -- Add parameters to new scope
-addParams :: [String] -> [Param] -> Scope -> FuncTable -> Scope
-addParams [name] [StrP param] scope _ = assignVal name value scope
+addParams :: [String] -> [Param] -> Scope -> FuncTable -> String -> (Scope, String)
+addParams [name] [StrP param] scope _ str = (assignVal name value scope, str)
   where value = getVal param scope 
-addParams [name] [RealP param] scope table = assignVal name value scope
-  where (value, _) = evalRealExp param scope table ""
-addParams [name] [BoolP param] scope table = assignVal name value scope
-  where (value, _) = evalBoolExp param scope table ""
-addParams (name : names) (param : params) scope table = addParams names params newScope table
-  where newScope = addParams [name] [param] scope table
-addParams [] params scope _ = scope
-addParams _ _ scope _ = scope
+addParams [name] [RealP param] scope table str = (assignVal name value scope, str ++ newStr)
+  where (value, newStr) = evalRealExp param scope table ""
+addParams [name] [BoolP param] scope table str = (assignVal name value scope, str ++ newStr)
+  where (value, newStr) = evalBoolExp param scope table ""
+addParams (name : names) (param : params) scope table str = addParams names params newScope table newStr
+  where (newScope, newStr) = addParams [name] [param] scope table str
+addParams [] params scope _ str = (scope, str)
+addParams _ _ scope _ str = (scope, str)
 
 -- Process statements
 processBody :: Body -> Scope -> FuncTable -> (String, Scope)
+processBody [] scope table  = ("", scope)
 processBody [stmt] scope table = parseStmt stmt scope table
 processBody (stmt : tl) scope table = (str1 ++ str2, newTable2)
   where (str1, newTable1) = processBody [stmt] scope table

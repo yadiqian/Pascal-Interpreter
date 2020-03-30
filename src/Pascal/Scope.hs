@@ -1,6 +1,5 @@
 module Pascal.Scope
 (
-    getVal,
     assignVal,
     addVar,
     funcTable,
@@ -39,13 +38,15 @@ assignVal name value [scope] = [Map.insert name value scope]
 assignVal name value (scope : tl) = (Map.insert name value scope) : tl
  
 getVal :: String -> Scope -> ValueT
+getVal name [] = error("Variable not declared ")
+getVal name [scope] = case (lookupVal name scope) of 
+  Just n -> n
+  Nothing -> error("Variable not declared ")
 getVal name (scope : tl) = case (lookupVal name scope) of 
   Just n -> n
   Nothing -> getVal name tl
-getVal _ _ = Float 0.0
 
 getFunc :: String -> FuncTable -> ([VarDef], [VarDef], [Definition], [Statement])
 getFunc name table = case (lookupFunc name table) of 
   Just val -> val
   Nothing -> ([], [], [], [])
-getFunc _ _ = ([], [], [], [])
