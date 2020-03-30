@@ -15,7 +15,7 @@ The following are implemented in this project:
 * Special Expressions: Readln, Writeln, sqrt, sin, cos, ln, exp
 * While-do and for-do loops
 * User-defined procedures and functions
-* Scoping
+* Variable scoping
 
 ## Commands
 To run e2e tests
@@ -36,6 +36,6 @@ runhaskell spec/FunctionSpec.hs; runhaskell spec/InterpretSpec.hs; runhaskell sp
 All the unit test files reside inside the ```Spec``` directory.
 
 ## Notes
-Highlighted functionalities of my interpreter:
+My interpreter is also able to handle
 * nested while and for loops
 * recursion
