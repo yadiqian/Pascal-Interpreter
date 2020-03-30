@@ -18,11 +18,11 @@ The following are implemented in this project:
 * Variable scoping
 
 ## Commands
-To run e2e tests
+To run functional tests
 ```
 cabal run /tests/test1.pas
 ```
-Note that there are 20 e2e test files in the ```tests``` folder.
+Note that there are 20 functional tests in the ```tests``` folder.
 
 To run unit tests:
 First cd into the ```src``` directory with 
