@@ -53,6 +53,7 @@ data RealExp =
     | Exp RealExp
     -- function
     | FuncReal String [Param]
+    deriving (Show, Eq)
 
 -- Data-structure for boolean expressions
 data BoolExp = 
@@ -69,10 +70,12 @@ data BoolExp =
     | VarBool String
     -- function
     | FuncBool String [Param]
+    deriving (Show, Eq)
 
 data GenExp = 
   FloatExp RealExp 
   | BExp BoolExp
+  deriving (Show, Eq)
 
 -- Data-structure for statements
 data Statement = 
@@ -101,10 +104,11 @@ data Statement =
     | ForDown String RealExp RealExp Statement
     -- Function call
     | FuncCall String [Param]
+    deriving (Show, Eq)
 
-data CaseStmt = Check GenExp Statement
+data CaseStmt = Check GenExp Statement deriving (Show, Eq)
 
-data VType = REAL | BOOL
+data VType = REAL | BOOL deriving (Show, Eq)
 
 data ValueT =
     Float Float
@@ -118,13 +122,16 @@ data Definition =
     | Func String [VarDef] [Definition] [Statement]
     -- Procedures
     | Proc String [VarDef] [VarDef] [Definition] [Statement]
+    deriving (Show, Eq)
 
 data VarDef =
     VarDef [String] VType
+    deriving (Show, Eq)
 
 data Block = 
     Body Body 
     | Stmt Statement
+    deriving (Show, Eq)
 
 data Program = Process Defs Body
 
@@ -132,7 +139,7 @@ data Param =
     RealP RealExp
     | BoolP BoolExp
     | StrP String 
-    -- | FuncP String [Param]
+    deriving (Show, Eq)
 
 -- Data-structure for hole program
 -- TODO: add declarations and other useful stuff
