@@ -8,7 +8,7 @@ begin
   a := 3;
   b := 5.555;
   c := false;
-  d := TRUE;
+  d := true;
   writeln(a + b);
   writeln(c and d);
   e := a - b;

@@ -20,7 +20,7 @@ The following are implemented in this project:
 ## Commands
 To run functional tests
 ```
-cabal run /tests/test1.pas
+cabal run tests/test1.pas
 ```
 Note that there are 20 functional tests in the ```tests``` folder.
 
